@@ -1,0 +1,133 @@
+Done:
+Thay đổi trong db: 
+- Chỉnh tất cả NhanVienLap mặc định là 0, chỉ khi thao tác tại quán mới có nhân viên lập
+Trang lịch sử 
++ Khung hiển thị Chi tiết phiếu đặt khi click vào hóa đơn: http://localhost:3000/history/:orderID
++ Thêm nút đánh giá trong mỗi hóa đơn, khi bấm vào hiện ra phần mục đánh giá và thang điểm cần chọn:http://localhost:3000/customer/history/10001
++ Khung hiển thị danh sách các hóa đơn đã thanh toán và tình trạng đơn hàng (đối với đặt online) (phân trang):
+http://localhost:3000/customer/history?page=1&limit=5
+Trang thông tin cá nhân
++ Cho biết thông tin cá nhân sử dụng procedure sp_TimKiemTheKhachHang, có chức năng thay đổi thông tin người dung
+http://localhost:3000/customer/profile/2
+
+Trang Orders (Đặt Online và đặt bàn trước)
+Đặt Online: 
++ Tìm kiếm các món ăn hỗ trợ giao hang:http://localhost:3000/customer/order/delivery
++ Nhập thông tin cơ bản: địa chỉ giao, số điện thoại ... (coi trong TABLE PhieuDatGiaoHang) - chỉ có trong đặt online
++ Hiển thị các khung chọn (Khu vực, Chi nhánh, Danh sách món ăn (phân trang)):
+  Khu vực: http://localhost:3000/customer/order/area
+  Chi nhánh của khu vực trên: http://localhost:3000/customer/order/branch
+  Danh sách món ăn của chi nhánh tren:http://localhost:3000/customer/order/delivery
++ Thêm một khung hiển thị các món ăn đã chọn	
++ Tích hợp thêm phần thanh toán vô để dễ coi, khi bấm nút thanh toán dữ liệu sẽ được lưu vào PhieuDat tương ứng và HoaDon:
+
+	them phiếu đặt và phiếu đặt giao hàng: http://localhost:3000/customer/order/delivery
+	them chi tiết phieu dat: http://localhost:3000/customer/order/orderDetail
+	thanh toan hoa don: http://localhost:3000/customer/order/createInvoice
++ Nâng cao: sort theo bảng chữ cái | giá tiền | món chạy nhất trong chi nhánh ...
+
+Đặt bàn trước:
++ Tìm kiếm các món ăn có phuc vu:http://localhost:3000/customer/order/online
++ Nhập thông tin cơ bản
++ Hiển thị các khung chọn (Khu vực, Chi nhánh, Danh sách món ăn (phân trang)):
+  Khu vực: http://localhost:3000/customer/order/area
+  Chi nhánh của khu vực trên: http://localhost:3000/customer/order/branch
+  Danh sách món ăn của chi nhánh tren:http://localhost:3000/customer/order/online
++ Thêm một khung hiển thị các món ăn đã chọn
++ Tích hợp thêm phần thanh toán vô để dễ coi, khi bấm nút thanh toán dữ liệu sẽ được lưu vào PhieuDat tương ứng và HoaDon:
+
+	them phiếu đặt và phiếu đặt bàn: http://localhost:3000/customer/order/online
+	them chi tiết phieu dat: http://localhost:3000/customer/order/orderDetail
+	thanh toan hoa don: http://localhost:3000/customer/order/createInvoice
++Đưa ra danh sách bàn trống của một chi nhánh: http://localhost:3000/customer/order/freetable
+
+Trang đăng ký
+Đăng kí: http://localhost:3000/customer/auth/signup
+Đăng nhập: tên đăng nhập: tên KH, mk: sđt: http://localhost:3000/customer/auth/login trả về biến exists true hoặc false
+
+-----------------------------------------------------------
+
+Phân hệ Chi Nhánh:
+
+Đăng nhập bằng thông tin của chi nhánh đó (TK là tên chi nhánh, MK là SĐT): http://localhost:3000/branch/auth/login
+
+Trang Danh sách món ăn:
++ Hiển thị tất cả món ăn của chi nhánh (phân trang): http://localhost:3000/branch/dish/1?page=2&limit=5
++ Chức năng điều chỉnh có phục vụ hay không: http://localhost:3000/branch/dish/updateState
++ Tìm kiếm món ăn:http://localhost:3000/branch/dish/searchDish
+
+Trang Order: 
++ Hiển thị cả 3 loại order (phân trang): http://localhost:3000/branch/order/1?page=1&limit=3
++ Thêm chức năng phân loại order : http://localhost:3000/branch/order/ordertype/1?page=2&limit=2
++ Có nút thêm/ xóa/ sửa order 
+
+Thêm:
+-Tao phieu dat va phieu dat truc tiep: http://localhost:3000/branch/order/offline
+-khi thêm sẽ hiện thị danh sách món ăn để nhân viên lập chọn: http://localhost:3000/branch/dish/1?page=&limit=
+-Them chi tiet phieu dat:http://localhost:3000/branch/order/orderdetail
+-Tao hoa don:http://localhost:3000/branch/order/createInvoice
+-Tao Danh gia:http://localhost:3000/branch/order/createDG
+Xóa :http://localhost:3000/branch/order/delete/100013
+Sửa
+
+(khi thêm sẽ hiện thị danh sách món ăn để nhân viên lập chọn, 
+hiển thị ra phiếu đặt, có mục chọn NhânViênLập)
++ Tìm phiếu đặt -> Nhân viên thanh toán sẽ click thanh toán, 
+sau khi thanh toán y/c nhập đánh giá (ko có thì click bỏ qua)    
+
+Trang Quản lý nhân viên:
++ Hiển thị tất cả nhân viên trong cửa hàng (phân trang): http://localhost:3000/branch/employee/getall/:branchID
++ Lọc nhân viên theo bộ phận: http://localhost:3000/branch/employee/getbyrole
++ Tìm kiếm nhân viên: http://localhost:3000/branch/employee/search
++ Thêm, xóa, sửa nhân viên ->đẩy lên cho công ty
+
+Trang thống kê
++ Tự thống kê doanh thu theo ngày, tháng, năm: http://localhost:3000/branch/revenue/:type
++ Hiển thị món ăn chạy nhất, chậm nhất theo ngày, tháng, năm: http://localhost:3000/branch/revenue/dish
+(dạng bảng theo doanh thu của các món ăn, có sort theo doanh thu để biết món ăn chậm nhất, chạy nhất)
+(phân trang)
+
+
+
+----------------------------------------------------------------------
+
+
+Phân Hệ Công Ty
+
+Đăng nhập bằng thông tin của admin (TK là admin, MK là admin)
+
+Trang Danh sách món ăn:
++ Hiển thị tất cả món ăn ̉(có thể phân loại theo khu vực, chi nhánh) (phân trang)
+Theo chi nhánh: http://localhost:3000/company/dish/bybranch/1?page=2&limit=3
+Theo khu vuc: http://localhost:3000/company/dish/byarea/1?page=2&limit=3	
++ Thêm, Xóa, Sửa thông tin món ăn 
+Thêm:http://localhost:3000/company/dish/createdish
+Xóa:http://localhost:3000/company/dish/deletedish
+Sửa:http://localhost:3000/company/dish/updatedish
++ Tìm kiếm món ăn: http://localhost:3000/company/dish/searchdish
+
+
+Trang Order: 
++ Hiển thị tất cả hóa đơn (phân theo loại trực tiếp, online, đặt bàn trước) (phân trang)
+Tất cả: http://localhost:3000/company/order?page=1&limit=3
+Theo loại:http://localhost:3000/company/order/type/T?page=1&limit=3
++ Xem được đánh giá của hóa đơn:http://localhost:3000/company/order/evaluation/1
++ Phân loại hóa đơn theo chi nhánh:http://localhost:3000/company/order/branch/1
+
+Trang Quản lý nhân viên:
++ Hiển thị tất cả nhân viên trong công ty, phân loại theo chi nhánh (phân trang)
+Tất cả nhân viên:http://localhost:3000/company/employee?page=2&limit=5
+Theo chi nhánh:http://localhost:3000/company/employee/bybranch/1?page=2&limit=3
++ Tìm kiếm nhân viên bang từ khóa: http://localhost:3000/company/employee/search
++ Chuyển nhân viên sang chi nhánh mới: http://localhost:3000/company/employee/reassign
++ Thêm, xóa, sửa thông tin nhân viên
+Thêm:http://localhost:3000/company/employee/created
+Xóa:http://localhost:3000/company/employee/deleted
+Sửa:http://localhost:3000/company/employee/updated
+
+
+Trang thống kê (dạng bảng) (phân trang)
++ Tự thống kê doanh thu theo ngày, tháng, năm của cty, chi nhánh: http://localhost:3000/company/revenue/:type
++ Hiển thị món ăn chạy/chậm nhất theo ngày, tháng, năm 
+theo tổng công ty, theo chi nhánh (dạng bảng có sort theo doanh thu): http://localhost:3000/company/revenue/dish
++ Thống kê điểm đánh giá trung bình theo chi nhánh: http://localhost:3000/company/revenue/evaluation/:type
