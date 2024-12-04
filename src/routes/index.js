@@ -11,6 +11,9 @@ const revenueCompanyRouter = require("./CT/revenueRoute.js")
 const orderCompanyRouter = require("./CT/orderRoute.js")
 const dishCompanyRouter = require("./CT/dishRoute.js")
 const employeeCompanyRouter = require("./CT/employeeRoute.js")
+
+const manageFoodRouter = require("./CT/manageFoodRouter.js")
+
 function route(app) {
     //KH
     app.use("/customer/history", historyRouter);
@@ -29,7 +32,9 @@ function route(app) {
     app.use("/company/revenue", revenueCompanyRouter);
     app.use("/company/order", orderCompanyRouter);
     app.use("/company/dish", dishCompanyRouter);
-    app.use("/company/employee", employeeCompanyRouter)
+    app.use("/company/employee", employeeCompanyRouter);
+    
+    app.use("/company/manage", manageFoodRouter);
 }
 
 module.exports = route;
