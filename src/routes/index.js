@@ -34,7 +34,7 @@ function route(app) {
     app.use("/company/dish", dishCompanyRouter);
     app.use("/company/employee", employeeCompanyRouter);
     
-    app.use("/company/manage", manageFoodRouter);
+    app.use("/company", manageFoodRouter);
 }
 
 module.exports = route;

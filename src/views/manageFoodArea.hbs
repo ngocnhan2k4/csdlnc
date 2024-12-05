@@ -1,0 +1,78 @@
+<div id="app" class="container">
+  <div class="nameArea">
+    <i class="fas fa-map-marker"></i>
+    Sushi
+    {{nameArea}}
+    brand
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card menu">
+        <div class="card-title">
+          <i class="fas fa-utensils"></i>
+          Menu
+        </div>
+        <div class="card-body">
+         <hr>
+          {{#each type}}
+          <a href='/company/dish/byarea/{{../areaID}}?index={{Muc}}&page=1&limit=3' class="custom-link">
+            <div class="type">{{Muc}}</div>
+          </a>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-9">
+      <div class="head-menu">
+        <div class="title-menu-body">Sashimi combo</div>
+        <div class="sort-menu-dish">Sort by Pricing</div>
+        <div class="serving-status">Serving status</div>
+      </div>
+
+        <div class="listDish"> 
+          <ul >
+            {{#each dishes}}
+            <div class="flex-dish">
+              <div class="card mt-5 col-md-6 dish">
+                <h3>{{TenMonAn}}</h3>
+                <p>{{MoTa}}</p>
+                <img src="{{HinhAnh}}" alt="{{TenMonAn}}" />
+                <p>Giá: {{GiaHienTai}}</p>
+              </div>
+              <input  type="checkbox" id="check1">
+            </div>
+              
+            {{/each}}
+          </ul>
+      </div>
+    </div>
+  </div>
+
+ 
+    
+
+     <div class="pagination">
+      {{#if (gt currentPage 1)}}
+        <a
+          href="/company/dish/byarea/{{areaID}}?index={{currentIndex}}&page={{dec currentPage}}&limit=3"
+          class="prev-page"
+        >Previous</a>
+      {{/if}}
+
+      {{#each totalPages}}
+        <a href="/company/dish/byarea/{{areaID}}?index={{currentIndex}}&page={{this}}&limit=3" class="{{#if (eq this currentPage)}}active{{/if}}">
+          {{this}}
+        </a>
+      {{/each}}
+
+      {{#if (lt currentPage totalPages)}}
+        <a
+          href="/company/dish/byarea/{{areaID}}?index={{currentIndex}}&page={{inc currentPage}}&limit=3"
+          class="next-page"
+        >Next</a>
+      {{/if}}
+    </div>
+
+</div>

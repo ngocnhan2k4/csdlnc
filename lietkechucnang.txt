@@ -97,9 +97,13 @@ Phân Hệ Công Ty
 Đăng nhập bằng thông tin của admin (TK là admin, MK là admin)
 
 Trang Danh sách món ăn:
+
 + Hiển thị tất cả món ăn ̉(có thể phân loại theo khu vực, chi nhánh) (phân trang)
+
 Theo chi nhánh: http://localhost:3000/company/dish/bybranch/1?page=2&limit=3
-Theo khu vuc: http://localhost:3000/company/dish/byarea/1?page=2&limit=3	
+Theo khu vực: http://localhost:3000/company/dish/byarea/1?page=2&limit=3	
+
+
 + Thêm, Xóa, Sửa thông tin món ăn 
 Thêm:http://localhost:3000/company/dish/createdish
 Xóa:http://localhost:3000/company/dish/deletedish

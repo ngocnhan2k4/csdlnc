@@ -22,7 +22,11 @@ app.engine('hbs', expressHandlebars.engine({
     layoutsDir: __dirname + '/src/views/layouts',
     partialsDir: __dirname + '/src/views/partials/',
     helpers: {
-        eq: (a, b) => a === b
+        eq: (a, b) => a === b,
+        gt: (a, b) => a > b,
+        dec: (a) => a - 1,
+        inc: (a) => a + 1,
+        lt: (a, b) => a < b, 
     }
 }));
 
