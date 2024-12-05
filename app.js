@@ -4,15 +4,17 @@ const expressHandlebars = require('express-handlebars');
 const dotenv = require("dotenv");
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const path = require('path'); 
 
 dotenv.config();
 const app= express();
 
-//Cấu hình template engine
 app.use(express.static("./src/public.js"));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.engine('hbs', expressHandlebars.engine({
     extname: 'hbs',
