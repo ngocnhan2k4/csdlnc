@@ -1,0 +1,69 @@
+<div class="container">
+    <div class="sidebar">
+        <div class="sidebar-content">
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="/images/auth2.png" alt="Chopsticks and bowl icon" class="logo-icon">
+                </div>
+                <p class="logo-text">
+                    Sign up to order Sushi<br>
+                    from us right now
+                </p>
+            </div>
+            <div class="sushi-image-container">
+                <img src="/images/auth1.png" alt="Sushi selection" class="sushi-image">
+            </div>
+        </div>
+    </div>
+    <div class="form-container">
+        <div class="form-content">
+            <div class="form-header">
+                <h1 class="form-title">Sign up</h1>
+            </div>
+            <form action="/signup" method="POST" class="form">
+                <div class="name-fields">
+                    <div class="input-group">
+                        <label for="first-name">First name</label>
+                        <input type="text" id="first-name" name="firstName" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="last-name">Last name</label>
+                        <input type="text" id="last-name" name="lastName" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender" required>
+                        <option value="">Select your gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="text" id="email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" value="" readonly>
+                    <span id="generated-username" style="font-style: italic; color: #555;"></span>
+                </div>
+                <div class="input-group">
+                    <label for="password">Phone Number</label>
+                    <div class="password-container">
+                        <input type="password" id="password" name="password" required pattern="^\d{10}$" title="Phone number must be exactly 10 digits" maxlength="10">
+                        <span class="toggle-password" onclick="togglePassword()">
+                            <img src="/images/hidePassword.jpg" alt="Toggle visibility" id="eye-icon">
+                        </span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="cid">Citizen ID (CID)</label>
+                    <input type="text" id="cid" name="cid" required placeholder="Enter your CID" pattern="^\d{12}$" title="CID must be exactly 12 digits" maxlength="12" minlength="12">
+                </div>
+                <button type="submit" class="submit-button">Create Account</button>
+            </form>
+            <p class="sign-in-text">Already have an account? <a href="/auth/signin" class="sign-in-link">Sign in</a></p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="container">
+    <div class="sidebar">
+        <div class="sidebar-content">
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="/images/auth2.png" alt="Chopsticks and bowl icon" class="logo-icon">
+                </div>
+                <p class="logo-text">
+                    Sign in to order Sushi<br>
+                    from us right now
+                </p>
+            </div>
+            <div class="sushi-image-container">
+                <img src="/images/auth1.png" alt="Sushi selection" class="sushi-image">
+            </div>
+        </div>
+    </div>
+    <div class="form-container">
+        <div class="form-content">
+            <div class="form-header">
+                <h1 class="form-title">Sign in</h1>
+            </div>
+            <form action="/signin" method="POST" class="form">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="username" id="username" name="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Phone Number</label>
+                    <div class="password-container">
+                        <input type="password" id="password" name="password" required pattern="^\d{10}$" title="Phone number must be exactly 10 digits" maxlength="10">
+                        <span class="toggle-password" onclick="togglePassword()">
+                            <img src="/images/hidePassword.jpg" alt="Toggle visibility" id="eye-icon">
+                        </span>
+                    </div>
+                </div>
+                <button type="submit" class="submit-button">Sign in</button>
+            </form>
+            <p class="sign-in-text">Don't have an account? <a href="/auth/signup" class="sign-up-link">Sign up</a></p>
+        </div>
+    </div>
+</div>
