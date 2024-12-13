@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path'); 
+const session = require('express-session');
 
 dotenv.config();
 const app= express();
@@ -32,6 +33,14 @@ app.engine('hbs', expressHandlebars.engine({
 
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/src/views');
+
+// sesion lưu thông tin người dùng
+app.use(session({
+    secret: 'authentication', // Thay bằng khóa bí mật riêng
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false } // Đặt `secure: true` nếu dùng HTTPS
+}));
 
 
 route(app);

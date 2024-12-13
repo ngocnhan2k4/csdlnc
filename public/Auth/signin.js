@@ -8,7 +8,7 @@ document.querySelector('.form').addEventListener('submit', async (event) => {
         alert('Vui lòng điền đầy đủ thông tin!');
         return;
     }
-    console.log(username)
+    // console.log(username)
 
     try {
         const response = await fetch('/Auth/signin', {
