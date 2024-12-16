@@ -94,6 +94,10 @@ background-color: #d5d5d5;
 .dish{
   background-color: #ffffff;
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  width: 50%;
+border-radius: 5px;
+padding: 10px;
 }
 .checked {
   color: green;
@@ -104,4 +108,37 @@ background-color: #d5d5d5;
   justify-content: center;
   gap:300px;
   align-items: center;
+  margin-top: 50px;
+}
+.check-box-service{
+  width: 50px;
+  height: 50px;
+}
+.price{
+  background-color: #d78080;
+  border-radius: 5px;
+  width: 30%;
+  color:white;
+  font-weight: bold;
+}
+.list-branchs{
+  background-color: #bababa;
+  border-radius: 5px;
+  padding: 10px;
+  
+}
+.branch{
+  color: rgb(6, 6, 6);
+}
+.branch:hover{
+  color: rgb(255, 255, 255);
+  background-color: #000;
+}
+.branch a{
+  text-decoration: none;
+  color: inherit; 
+}
+.branch:hover a{
+  color: rgb(255, 255, 255);
+  background-color: #000;
 }
