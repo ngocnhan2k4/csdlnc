@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-title fw">
+          <button class="button-order">
+            <h2>Manager Dish:</h2>
+          </button>
+          <div class="All-area">All area:</div>
+          {{#each areas}}
+            <div class="company-area">
+              <a href="company/dish/byarea/{{MaKhuVuc}}?page=2&limit=3" >{{TenKhuVuc}}</a>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-title fw">
+          <a href="company/order?page=1&limit=10">
+            <button class="button-order">
+              <h2>Manager Dish</h2>
+            </button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

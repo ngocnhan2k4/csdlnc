@@ -1,0 +1,57 @@
+<div class="manageOrder-container">
+  <div class="manage-order-title">
+    <a href="T?page=1&limit=10" class="active">Direct order</a>
+    <a href="O?page=1&limit=10" class="online-order">Online order</a>
+    <a href="G?page=1&limit=10" class="reservation-order">Reservation order</a>
+  </div>
+
+  <div class="manage-order-body">
+    <div class="manage-order-header">
+      <div class="header-col-1">
+        #
+      </div>
+
+      <div class="header-col-2">
+        ORDER ID
+      </div>
+
+      <div class="header-col-3">
+        DATE
+      </div>
+
+      <div class="header-col-5">
+        TOTAL COST
+      </div>
+
+      <div class="header-col-6">
+        CASHIER
+      </div>
+    </div>
+    <div class="manage-order-content">
+      {{#each orders}}
+        <div class="order">
+
+          <div class="header-col-1">#</div>
+          <div class="header-col-2">{{MaPhieuDat}}</div>
+           <div class="header-col-3">{{NgayLap}}</div>
+          <div class="header-col-5">{{TongTien}}</div>
+           <div class="header-col-6">{{HoTen}}</div>
+        </div>
+        <hr />
+      {{/each}}
+    </div>
+
+    <div class="manage-order-footer">
+      <div class="order-current">
+        {{min}}-{{max}}
+        of
+        {{totalOrders}}
+      </div>
+      <div class="pagination">
+        <a href="{{Loai}}?page={{previous}}&limit=10" class="prev-btn">&#60;</a>
+        <span class="pagination-info">{{currentPage}} / {{totalPages}} </span>
+        <a href="{{Loai}}?page={{nextPage}}&limit=10" class="next-btn">&#62;</a>
+      </div>
+    </div>
+  </div>
+</div>

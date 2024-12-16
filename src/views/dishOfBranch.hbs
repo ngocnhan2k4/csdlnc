@@ -3,6 +3,8 @@
     <i class="fas fa-map-marker"></i>
     Sushi
     {{nameArea}}
+    - 
+    {{nameBranch}}
     brand
   </div>
 
@@ -16,7 +18,7 @@
         <div class="card-body">
          <hr>
           {{#each type}}
-          <a href='/company/dish/byarea/{{MaKhuVuc}}?index={{Muc}}&page=1&limit=3' class="custom-link">
+          <a href='/company/dish/byarea/{{../areaID}}?index={{Muc}}&page=1&limit=3' class="custom-link">
             <div class="type">{{Muc}}</div>
           </a>
           {{/each}}
@@ -27,7 +29,7 @@
         {{#each branchs}}
 
           <div class="branch">
-            <a href="/company/dish/bybranch/{{MaChiNhanh}}?areaID={{KhuVuc}}&page=1&limit=3" >{{TenChiNhanh}}</a>
+            <a href="/company/dish/bybranch/{{MaChiNhanh}}?areaID={{KhuVuc}}&page=2&limit=3" >{{TenChiNhanh}}</a>
           </div>
           
         {{/each}}

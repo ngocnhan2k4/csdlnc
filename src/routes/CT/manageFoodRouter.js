@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const manageFoodController = require('../../controllers/CT/manageFoodController.js');
+const companyController = require('../../controllers/CT/companyController.js');
 
-router.get('/', manageFoodController.renderArea);
-router.get('/area', manageFoodController.getArea);
-router.get('/food', manageFoodController.renderManageFoodArea);
+router.get('/',  companyController.homeCompany);
 
+router.get('/area', companyController.getArea);
 
 module.exports = router;
