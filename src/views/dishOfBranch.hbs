@@ -69,28 +69,23 @@
   </div>
 
  
-    
-
-     <div class="pagination">
+    <div class="pagination">
       {{#if (gt currentPage 1)}}
-        <a
-          href="/company/dish/byarea/{{areaID}}?index={{currentIndex}}&page={{dec currentPage}}&limit=3"
-          class="prev-page"
-        >Previous</a>
+          <a href="?areaID={{areaID}}&page={{sub currentPage 1}}&limit=3" class="page-link">Previous</a>
       {{/if}}
 
-      {{#each totalPages}}
-        <a href="/company/dish/byarea/{{areaID}}?index={{currentIndex}}&page={{this}}&limit=3" class="{{#if (eq this currentPage)}}active{{/if}}">
-          {{this}}
-        </a>
+      {{#each (range 1 totalPages)}}
+          {{#if (eq this ../currentPage)}}
+              <span class="page-link active">{{this}}</span>
+          {{else}}
+             <a href="?areaID={{../areaID}}&page={{this}}&limit=3" class="page-link">{{this}}</a>
+          {{/if}}
       {{/each}}
 
       {{#if (lt currentPage totalPages)}}
-        <a
-          href="/company/dish/byarea/{{areaID}}?index={{currentIndex}}&page={{inc currentPage}}&limit=3"
-          class="next-page"
-        >Next</a>
+          <a href="?areaID={{areaID}}&page={{add currentPage 1}}&limit=3" class="page-link">Next</a>
       {{/if}}
+      
     </div>
 
 </div>

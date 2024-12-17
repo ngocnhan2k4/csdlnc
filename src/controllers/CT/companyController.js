@@ -17,8 +17,8 @@ controller.homeCompany = async (req, res) => {
     title: "Company",
     customHead: 
     `
-      <link rel="stylesheet" href="/CT/manageFood/manageFood.css">
-      <script defer src="/CT/manageFood/manageFood.js"></script>
+      <link rel="stylesheet" href="/CT/manageFood/company.css">
+      <script defer src="/CT/manageFood/company.js"></script>
     `,
     areas:result.recordset
   });

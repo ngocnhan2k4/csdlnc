@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-6">
       <div class="card">
         <div class="card-title fw">
           <button class="button-order">
@@ -9,14 +9,121 @@
           <div class="All-area">All area:</div>
           {{#each areas}}
             <div class="company-area">
-              <a href="company/dish/byarea/{{MaKhuVuc}}?page=2&limit=3" >{{TenKhuVuc}}</a>
+              <a
+                href="/company/dish/byarea/{{MaKhuVuc}}?index=Hotpot&page=1&limit=3"
+              >{{TenKhuVuc}}</a>
             </div>
           {{/each}}
         </div>
       </div>
+
+      <div class="add-dish mt-5">Add Dish</div>
+      <form id="addDishForm" class="form-add-dish">
+        <div class="add-tag">
+          <div class="add-name"> <label for="TenMonAn">Tên Món Ăn:</label></div>
+          <div class="add-index"> <label for="Muc">Mục:</label></div>
+          <div class="add-des"><label for="MoTa">Mô Tả Món Ăn:</label></div>
+          <div class="add-img"><label for="HinhAnh">Hình Ảnh:</label></div>
+          <div class="add-price"><label for="GiaHienTai">Giá Hiện Tại:</label></div>
+        </div>
+        <div class="add-body">
+          <div>
+            <input
+              class="add-in-name"
+              type="text"
+              id="TenMonAn"
+              name="TenMonAn"
+              required
+            /></div>
+          <div><input
+              class="add-in-index"
+              type="text"
+              id="Muc"
+              name="Muc"
+              required
+            /></div>
+          <div><input
+              class="add-in-des"
+              type="text"
+              id="MoTa"
+              name="MoTa"
+              required
+            /></div>
+          <div>
+            <input
+              class="add-in-img"
+              type="text"
+              id="HinhAnh"
+              name="HinhAnh"
+              required
+            /></div>
+          <div><input
+              class="add-in-price"
+              type="number"
+              id="GiaHienTai"
+              name="GiaHienTai"
+              required
+            /></div>
+          <div class="add-in-sub">
+            <button class="add-style" type="submit">Thêm Món Ăn</button></div>
+        </div>
+      </form>
+
+
+
+      <div class="search-dish mt-5">Search Dish</div>
+      <form id="searchForm" class="form-search-dish">
+        <label for="TuKhoa">Search Dish:</label>
+        <input class="search-in-name" placeholder="Nhập từ khóa cần tìm kiếm..." type="text" id="TuKhoa" name="TuKhoa" required />
+        <button class="search-style" type="submit">Search</button>
+      </form>
+      <div class="container-search">
+      <h5>Search Results:</h5>
+      <ul id="searchResults"></ul>
+      </div>
+
+      <div class="delete-dish mt-5">Delete Dish</div>
+      <form id="deleteForm" class="form-search-dish">
+        <label for="MaMonAn">Mã Món Ăn:</label>
+        <input class="search-in-name" placeholder="Nhập mã món ăn cần xóa..."  type="text" id="MaMonAn" name="MaMonAn" required />
+        <button class="search-style" type="submit">Xóa Món Ăn</button>
+      </form>
+
+      <div id="deleteResult"></div>
+      <!-- Khu vực hiển thị kết quả -->
+
+
+      <h1>Cập Nhật Món Ăn</h1>
+
+      <!-- Form Cập Nhật Món Ăn -->
+      <form id="updateDishForm" class="form-add-dish">
+        <div class="up-tag">
+          <div class="up-code"><label for="MaMonAn">Mã Món Ăn:</label></div>
+          <div class="up-name"><label for="TenMon">Tên Món Ăn:</label></div>
+          <div class="up-index"><label for="Muc">Mục:</label></div>
+          <div class="up-des"><label for="MoTa">Mô Tả Món Ăn:</label></div>
+          <div class="up-img"><label for="HinhAnh">Hình Ảnh:</label></div>
+          <div class="up-price"><label for="GiaHienTai">Giá Hiện Tại:</label></div>
+        </div>
+
+
+        <div class="up-body">
+          <input class="up-in-code" type="text" id="a" name="MaMonAn" required /><br /><br />
+          <input class="up-in-name" type="text" id="b" name="TenMon" required /><br /><br />
+          <input class="up-in-index" type="text" id="c" name="Muc" required /><br /><br />
+          <input class="up-in-des" type="text" id="d" name="MoTa" required /><br /><br />
+          <input class="up-in-img" type="text" id="e" name="HinhAnh" required /><br /><br />
+          <input class="up-in-price" type="number" id="f" name="GiaHienTai" required /><br /><br />
+          <button class="up-in-submit" type="submit">Cập Nhật</button>
+        </div>
+        
+      </form>
+
+      <!-- Kết quả thông báo -->
+      <div id="updateResult"></div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-6">
       <div class="card">
         <div class="card-title fw">
           <a href="company/order?page=1&limit=10">

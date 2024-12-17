@@ -68,7 +68,7 @@
 
  
     
-
+{{!-- 
      <div class="pagination">
       {{#if (gt currentPage 1)}}
         <a
@@ -89,6 +89,25 @@
           class="next-page"
         >Next</a>
       {{/if}}
-    </div>
+    </div> --}}
 
+    <div class="pagination">
+      {{#if (gt currentPage 1)}}
+       
+          <a href="?index={{currentIndex}}&page={{sub currentPage 1}}&limit=3" class="page-link">Previous</a>
+      {{/if}}
+
+      {{#each (range 1 totalPages)}}
+          {{#if (eq this ../currentPage)}}
+              <span class="page-link active">{{this}}</span>
+          {{else}}
+              <a href="?index={{../currentIndex}}&page={{this}}&limit=3" class="page-link">{{this}}</a>
+          {{/if}}
+      {{/each}}
+
+      {{#if (lt currentPage totalPages)}}
+          <a href="?index={{currentIndex}}&page={{add currentPage 1}}&limit=3" class="page-link">Next</a>
+       
+      {{/if}}
+    </div>
 </div>
