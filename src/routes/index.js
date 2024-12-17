@@ -14,11 +14,13 @@ const employeeCompanyRouter = require("./CT/employeeRoute.js")
 
 const manageFoodRouter = require("./CT/manageFoodRouter.js")
 
-const authRouter = require("./Auth/authRoute.js")
+const authRouter = require("./Auth/authRoute.js");
+const homeController = require("../controllers/KH/homeController.js");
 
 function route(app) {
     //Auth
     app.use("/auth", authRouter);
+    app.use("/home", homeController);
 
     //KH
     app.use("/customer/history", historyRouter);

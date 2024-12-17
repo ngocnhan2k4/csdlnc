@@ -27,6 +27,8 @@ app.engine('hbs', expressHandlebars.engine({
         dec: (a) => a - 1,
         inc: (a) => a + 1,
         lt: (a, b) => a < b, 
+        subtract: (a, b) => a - b,
+        add: (a, b) => a + b,
     }
 }));
 
