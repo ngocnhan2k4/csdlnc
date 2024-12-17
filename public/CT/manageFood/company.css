@@ -1,0 +1,229 @@
+.container {
+  margin-top: 10px;
+  width: 100%;
+  background-color: rgb(224, 224, 224);
+  border-radius: 5px;
+}
+.head-menu {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.title-menu-body {
+  font-size: 20px;
+  font-weight: bold;
+}
+.serving-status {
+  font-size: 20px;
+  font-weight: bold;
+}
+.sort-menu-dish {
+  border: 1px solid rgb(136, 136, 136);
+  border-radius: 40px;
+  padding: 10px;
+}
+.button-order {
+  border-radius: 5px;
+  border: none;
+  background-color: rgb(255, 255, 255);
+  font-weight: bold;
+}
+.company-area{
+  margin-top: 20px;
+  margin-top: 20px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 5px;
+  padding: 5px;
+  color:black,
+}
+.company-area:hover{
+  color:white;
+  background-color: rgb(4, 4, 4);
+}
+.company-area a {
+  text-decoration: none; 
+  color: inherit; 
+}
+.company-area a:hover {
+  text-decoration: none; 
+  color: white; 
+  background-color: rgb(4, 4, 4); /* Tuỳ chọn */
+}
+.All-area{
+  background-color: rgb(255, 255, 255);
+  font-size: 150%;
+  width: 100%;
+  border-radius: 5px;
+  padding:5px;
+}
+.form-add-dish{
+  display: flex;
+  border:1px solid rgb(133, 133, 133);
+  border-radius: 5px;
+  height: 380px;
+  align-items: center;
+}
+.form-add-dish{
+  width: 100%;
+}
+.add-dish{
+  font-size: 20px;
+  font-weight: bold;
+}
+.add-tag,.up-tag{
+  position: relative;
+  height: 80%;
+  width: 40%;
+  margin-left: 10px;
+}
+
+.add-index{
+  position: absolute;
+  top:50px;
+}
+.add-des{
+  position: absolute;
+  top:100px;
+}
+.add-img{
+  position: absolute;
+  top:150px;
+}
+.add-price{
+  position: absolute;
+  top:200px;
+}
+.add-body,.up-body{
+  position: relative;
+  height: 80%;
+  width: 60%;
+}
+.add-in-name{
+  border-radius: 5px;
+  width: 90%;
+}
+.add-in-index{
+  position: absolute;
+  top:50px;
+  border-radius: 5px;
+  width: 90%;
+}
+.add-in-des{
+  position: absolute;
+  top:100px;
+  border-radius: 5px;
+  width: 90%;
+}
+.add-in-img{
+  position: absolute;
+  top:150px;
+  border-radius: 5px;
+  width: 90%;
+}
+.add-in-price{
+  position: absolute;
+  top:200px;
+  border-radius: 5px;
+  width: 90%;
+}
+.add-in-sub{
+  position: absolute;
+  top:250px;
+  border-radius: 5px;
+  width: 90%;
+}
+.add-style{
+  border-radius: 5px;
+}
+
+.search-dish{
+  font-size: 20px;
+  font-weight: bold;
+}
+.form-search-dish{
+  width: 100%;
+  border: 1px solid rgb(150, 150, 150);
+  border-radius: 5px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
+  padding: 10px;
+}
+.search-in-name{
+  width: 60%;
+  border-radius: 5px;
+}
+.search-style{
+  border-radius: 5px;
+}
+.container-search{
+  width: 100%;
+border: 1px solid rgb(136, 136, 136);
+border-radius: 5px;
+}
+.delete-dish{
+  font-size:20px;
+  font-weight: bold;
+}
+
+.up-name{
+  position: absolute;
+  top:50px;
+}
+.up-index{
+  position: absolute;
+  top:100px;
+}
+.up-des{
+  position: absolute;
+  top:150px;
+}
+.up-img{
+  position: absolute;
+  top:200px;
+}
+.up-price{
+  position: absolute;
+  top:250px;
+}
+.up-in-code{
+  width: 90%;
+  border-radius: 5px;
+}
+.up-in-name{
+  position: absolute;
+  width: 90%;
+  border-radius: 5px;
+  top:50px;
+}
+.up-in-index{
+  position: absolute;
+  width: 90%;
+  border-radius: 5px;
+  top:100px;
+}
+.up-in-des{
+  position: absolute;
+  width: 90%;
+  border-radius: 5px;
+  top:150px;
+}
+.up-in-img{
+  position: absolute;
+  width: 90%;
+  border-radius: 5px;
+  top:200px;
+}
+.up-in-price{
+  position: absolute;
+  width: 90%;
+  border-radius: 5px;
+  top:250px;
+}
+.up-in-submit{
+  position: absolute;
+  border-radius: 5px;
+  top:300px;
+}
