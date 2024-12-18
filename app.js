@@ -8,7 +8,15 @@ const path = require('path');
 const session = require('express-session');
 
 dotenv.config();
-const app= express();
+const app = express();
+
+// Configure session middleware
+app.use(session({
+    secret: 'your_secret_key', // Use a secure secret key
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Set true for HTTPS
+}));
 
 app.use(express.static("./src/public.js"));
 app.use(cors());
@@ -25,10 +33,12 @@ app.engine('hbs', expressHandlebars.engine({
     helpers: {
         eq: (a, b) => a === b,
         gt: (a, b) => a > b,
-        lt: (a, b) => a < b,
+
         dec: (a) => a - 1,
         inc: (a) => a + 1,
+
         lt: (a, b) => a < b, 
+        
         subtract: (a, b) => a - b,
         add: (a, b) => a + b,
         sub: (a, b) => a - b,

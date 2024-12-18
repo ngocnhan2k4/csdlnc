@@ -77,12 +77,12 @@ const authController = {
 
     postSignin: async (req, res) => {
         try {
-            if (req.session.user) {
-                if (req.session.user.role === 'admin') {
+            if (req.session.userRole) {
+                if (req.session.userRole === 'admin') {
                     // do something, redirect or return error
                     return res.status(400).json({ message: "Bạn đã đăng nhập với tư cách là admin!" });
                 }
-                else if (req.session.user.role === 'branch') {
+                else if (req.session.userRole === 'branch') {
                     // do something, redirect or return error
                     return res.status(400).json({ message: "bạn đã đăng nhập với tư cách là chi nhánh!" });
                 }
@@ -98,11 +98,8 @@ const authController = {
                 return res.status(400).json({ message: "Username và password không được để trống!" });
             }
 
-            if (username === 'admin' && password === '0000000000') {
-                req.session.user = {
-                    username: username,
-                    role: 'admin'
-                };
+            if (username === 'admin' && password === 'admin') {
+                req.session.userRole = 'admin'; // Store role in session
                 return res.status(200).json({ message: "Đăng nhập thành công với tư cách là Admin!", code: 1});
             }
 
@@ -117,11 +114,10 @@ const authController = {
                     WHERE TenChiNhanh = @Username AND SoDienThoai = @Password
                 `);
             if (result1.recordset.length > 0) {
-                req.session.user = {
-                    username: username,
-                    role: 'branch'
-                };
-                return res.status(200).json({ message: "Đăng nhập thành công với tư cách là Chi nhánh!", data: result1.recordset[0], code: 2});
+                req.session.userRole = 'branch'; // Store role in session
+                // Store branch ID in session
+                req.session.userID = result1.recordset[0].MaChiNhanh;
+                return res.status(200).json({ message: "Đăng nhập thành công với tu cách là Chi nhánh!", data: result1.recordset[0], code: 2});
             }
 
             
@@ -135,10 +131,11 @@ const authController = {
                 `);
 
             if (result.recordset.length > 0) {
-                req.session.user = {
-                    username: username,
-                    role: 'customer'
-                };
+                req.session.userRole = 'customer'; // Store role in session
+                // Store customer ID in session
+                req.session.userID = result.recordset[0].MaTheKhachHang;
+                // Store type of card in session
+                req.session.cardType = result.recordset[0].LoaiThe;
                 return res.status(200).json({ message: "Đăng nhập thành công với tư cách là khách hàng!", data: result.recordset[0], code: 3 });
             } else {
                 return res.status(404).json({ message: "Tên đăng nhập hoặc mật khẩu không tồn tại!" });

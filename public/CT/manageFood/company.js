@@ -76,13 +76,18 @@ document.getElementById("searchForm").addEventListener("submit", function(event)
 // Xóa kết quả tìm kiếm khi click ra ngoài màn hình
 document.addEventListener('click', function(event) {
     const searchForm = document.getElementById("searchForm");
+    const deleteForm = document.getElementById("deleteForm");
     const resultsList = document.getElementById("searchResults");
     const inputField = document.getElementById("TuKhoa");  // Lấy ô input từ khóa tìm kiếm
+    const deleteField = document.getElementById("MaMonAn");  // Lấy ô input từ khóa tìm kiếm
 
     // Kiểm tra nếu click ra ngoài form tìm kiếm và danh sách kết quả
     if (!searchForm.contains(event.target) && !resultsList.contains(event.target)) {
         resultsList.innerHTML = '';  // Xóa kết quả tìm kiếm
         inputField.value = '';  // Xóa nội dung ô input
+    }
+    if( !deleteForm.contains(event.target)){
+        deleteField.value='';
     }
 });
 
@@ -103,14 +108,18 @@ document.getElementById("deleteForm").addEventListener("submit", function(event)
     })
     .then(response => response.json())  // Parse kết quả trả về từ server
     .then(data => {
-        const resultDiv = document.getElementById("deleteResult");
-        resultDiv.innerHTML = data.message;  // Hiển thị thông báo kết quả xóa
+        if (data.message) {
+            alert(data.message);  // Hiển thị thông báo từ server (ví dụ: "Xóa món ăn thành công")
+        } else {
+            alert('Xóa món ăn thành công!');
+        }
     })
     .catch(error => {
         console.error('Lỗi:', error);
         alert("Đã xảy ra lỗi, vui lòng thử lại sau.");
     });
 });
+
 
 document.getElementById("updateDishForm").addEventListener("submit", async (e) => {
     e.preventDefault(); // Ngăn form reload trang
