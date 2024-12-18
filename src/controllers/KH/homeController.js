@@ -330,6 +330,7 @@ const processOrder = async (req, res) => {
         
         console.log('result:', result);
         console.log('Order processed successfully:', MaPhieuDat);
+        updateTableStatusInDB(branchId, tableNumber, 'Không trống');
 
         res.status(200).json({
             success: true,
@@ -351,9 +352,60 @@ const processOrder = async (req, res) => {
     }
 };
 
+// write a function to update table status
+const updateTableStatusInDB = async (branchId, tableNumber, status) => {
+    try {
+        const pool = await dbService.connect();
+
+        const updateTableQuery = `
+            UPDATE BanAn
+            SET TrangThai = N'${status}'
+            WHERE MaChiNhanh = ${branchId} AND STT = ${tableNumber}
+        `;
+        console.log('Update BanAn Query:', updateTableQuery); // Debugging
+        const result = await pool.request().query(updateTableQuery);
+        console.log('Update Table Result:', result); // Debugging
+
+        return true;
+    } catch (error) {
+        console.error('Database query error:', error);
+        return false;
+    }
+};
+
+// Post home/updateTableStatus
+const updateTableStatus = async (req, res) => {
+    try {
+        const { tableNumber, branchId, status } = req.body;
+        const pool = await dbService.connect();
+
+        const updateTableQuery = `
+            UPDATE BanAn
+            SET TrangThai = N'${status}'
+            WHERE MaChiNhanh = ${branchId} AND STT = ${tableNumber}
+        `;
+        console.log('Update BanAn Query:', updateTableQuery); // Debugging
+        const result = await pool.request().query(updateTableQuery);
+        console.log('Update Table Result:', result); // Debugging
+
+        res.status(200).json({
+            success: true,
+            message: 'Table status updated successfully',
+        });
+    } catch (error) {
+        console.error('Database query error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to update table status',
+            error: error.message,
+        });
+    }
+};
+
 
 
 module.exports = {
     homePage,
     processOrder,
+    updateTableStatus,
 };

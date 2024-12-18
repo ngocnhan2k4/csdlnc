@@ -600,12 +600,27 @@
         const result = await response.json();
 
         if (response.ok) {
-            alert(result.message + 
-            ' Your order number is: ' + result.data.MaPhieuDat + '.' + 
-            ' Total: ' + result.data.TongTien + ' VND' +
-            ' Discount: ' + result.data.TienGiam + ' VND' +
-            ' Final Total: ' + result.data.ThanhTien + ' VND'
-            );
+        //    const responseUpdateTaleStatus = await fetch('/home/updateTableStatus', {
+        //        method: 'POST',
+        //        headers: { 'Content-Type': 'application/json' },
+        //        body: JSON.stringify({
+        //            tableNumber: selectedTable, 
+        //            branchId: document.getElementById('branch').value, 
+        //            status: 'Không trống'}),
+        //    });
+
+            if (true) {
+                alert(result.message + 
+                ' Your order number is: ' + result.data.MaPhieuDat + '.' + 
+                ' Total: ' + result.data.TongTien + ' VND' +
+                ' Discount: ' + result.data.TienGiam + ' VND' +
+                ' Final Total: ' + result.data.ThanhTien + ' VND'
+                );
+            } else {
+            //    alert(responseUpdateTaleStatus.message);
+            }
+
+            
         } else {
             alert(result.message);
         }
