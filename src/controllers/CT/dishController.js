@@ -205,10 +205,21 @@ const dishController = {
   deleteDish: async (req, res) => {
     const pool = await dbService.connect();
     const { MaMonAn } = req.body; // Đọc tham số từ body khi dùng DELETE
-    const result = await pool.request().query(`
-        EXEC sp_DeleteDish @MaMonAn = ${MaMonAn}
-    `);
+    try {
+      const result = await pool.request().query(`
+          EXEC sp_DeleteDish @MaMonAn = ${MaMonAn}
+      `);
+      // Kiểm tra kết quả để xác nhận xóa thành công
+      if (result.rowsAffected[0] > 0) {
+        res.status(200).json({ message: 'Xóa món ăn thành công' });
+      } else {
+        res.status(404).json({ message: 'Không tìm thấy món ăn để xóa' });
+      }
+    } catch (error) {
+      res.status(500).json({ message: 'Có lỗi xảy ra', error: error.message });
+    }
   },
+  
 
   updateDish: async (req, res) => {
     try {
