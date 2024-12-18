@@ -5,9 +5,19 @@ const dotenv = require("dotenv");
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path'); 
+const session = require('express-session');
+
 
 dotenv.config();
-const app= express();
+const app = express();
+
+// Configure session middleware
+app.use(session({
+    secret: 'your_secret_key', // Use a secure secret key
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Set true for HTTPS
+}));
 
 app.use(express.static("./src/public.js"));
 app.use(cors());

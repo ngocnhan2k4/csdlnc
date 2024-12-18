@@ -16,11 +16,22 @@ const manageFoodRouter = require("./CT/manageFoodRouter.js")
 
 const authRouter = require("./Auth/authRoute.js");
 const homeController = require("../controllers/KH/homeController.js");
+const router = require("express").Router();
 
 function route(app) {
     //Auth
     app.use("/auth", authRouter);
-    app.use("/home", homeController);
+    
+    // Redirect '/' to '/home'
+    app.use('/', (req, res, next) => {
+        if (req.path === '/') {
+            return res.redirect('/home');
+        }
+        next();
+    });
+    app.use("/home", homeController.homeController);
+    router.post("/home/processOrder", homeController.processOrder);
+
 
     //KH
     app.use("/customer/history", historyRouter);
