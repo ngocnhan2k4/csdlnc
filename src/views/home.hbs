@@ -274,6 +274,7 @@
             document.getElementById('searchQuery').value = data.q || '';
             document.getElementById('sortByPrice').value = data.sortByPrice || 'asc';
             document.getElementById('orderType').value = data.orderType || 'O';
+            userId = data.userId;
             
 
             // Update branches dropdown
@@ -524,7 +525,7 @@
                 return;
             }
         }
-        
+        debugger;
         const orderData = {
             tableNumber: selectedTable,
             menu: order,

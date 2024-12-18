@@ -238,7 +238,8 @@ const processOrder = async (req, res) => {
                         WHERE MaChiNhanh = ${branchId} AND STT = ${tableValue}
                     `;
                     console.log('Update BanAn Query:', updateTableQuery); // Debugging
-                    await transaction.request().query(updateTableQuery);
+                    const result = await transaction.request().query(updateTableQuery);
+                    console.log('Update Table Result:', result); // Debugging
                 }
         
                 // Commit the transaction
@@ -322,11 +323,12 @@ const processOrder = async (req, res) => {
 
         console.log('userId:', userId);
         const currentDate = new Date();
-        await pool.request().query(`
+        const result = await pool.request().query(`
             INSERT INTO HoaDon (MaKhachHang, TongTien, NgayLap, MaPhieuDat, TienGiam, NhanVienLap)
             VALUES (${userId}, ${TongTien}, '${currentDate.toISOString().slice(0, 10)}' , ${MaPhieuDat}, ${TienGiam}, ${employeeId})
         `);
         
+        console.log('result:', result);
         console.log('Order processed successfully:', MaPhieuDat);
 
         res.status(200).json({

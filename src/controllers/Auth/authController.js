@@ -132,7 +132,7 @@ const authController = {
 
             if (result.recordset.length > 0) {
                 req.session.userRole = 'customer'; // Store role in session
-            //    console.log('result: ', result.recordset[0]);
+                console.log('result: ', result.recordset[0]);
                 // Store customer ID in session
                 req.session.userId = result.recordset[0].MaTheKhachHang;
                 // Store type of card in session
