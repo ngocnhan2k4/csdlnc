@@ -57,6 +57,7 @@
 }
 
 #add-employee-modal {
+    
     display: flex;
     align-items: center;
     justify-content: center;
@@ -67,10 +68,10 @@
 }
 
 #add-employee-modal .bg-white {
-    width: 100%; /* Chiếm 100% chiều rộng của phần tử cha */
-    max-width: 700px; /* Giảm chiều rộng tối đa của modal */
-    padding: 20px; /* Giảm padding của modal */
-    border-radius: 8px; /* Bo tròn các góc */
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    border-radius: 8px; 
 }
 
 .hidden {

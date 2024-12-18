@@ -4,13 +4,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const pageInput = document.getElementById('pageInput');
     const totalPagesElement = document.getElementById('totalPages');
     const tableBody = document.querySelector('.employee-table tbody');
-
+    const branchSelect = document.getElementById('branch-select'); // Lấy phần tử chọn chi nhánh
+    const searchInput = document.querySelector('.search-input'); // Lấy phần tử tìm kiếm
+    const searchBtn = document.getElementById('search-btn'); // Nút tìm kiếm
     const addEmployeeBtn = document.querySelector('.add-employee-btn'); // Nút mở modal
     const modal = document.getElementById('add-employee-modal'); // Modal popup
     const cancelBtn = document.querySelector('.cancel-btn'); // Nút hủy trong modal
     const form = document.getElementById('add-employee-form'); // Form trong modal
+    const saveBtn = document.getElementById('save-employee-btn'); // Nút lưu trong modal
 
-    let maxPage = 1; // Khởi tạo biến maxPage, bạn có thể lấy giá trị này từ dữ liệu trả về từ API (sẽ cập nhật sau)
+    let maxPage = 1; // Khởi tạo biến maxPage, bạn có thể lấy giá trị này từ dữ liệu trả về từ API
 
     // Kiểm tra nếu các phần tử tồn tại
     if (!addEmployeeBtn || !modal || !cancelBtn || !form || !tableBody) {
@@ -50,10 +53,66 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Hàm gọi API với rowsPerPage và page
-    async function fetchData(rowsPerPage, page) {
+    // Gọi API thêm nhân viên
+    async function addEmployee(data) {
         try {
-            const response = await fetch(`/company/employee/getAllEmployee?rowsPerPage=${rowsPerPage}&page=${page}`);
+            console.log("create")
+            console.log(data)
+            const response = await fetch('/company/employee/created', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'Failed to add employee');
+            }
+
+            const result = await response.json();
+            alert('Employee added successfully!');
+            modal.style.display = "none";
+            form.reset();
+            fetchData(rowsPerPageSelect.value, pageInput.value, branchSelect.value, searchInput.value.trim());
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to add employee: ' + error.message);
+        }
+    }
+
+    // Xử lý sự kiện khi nhấn nút "Save"
+    saveBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const employeeData = {
+            HoTen: form.querySelector('#full-name').value.trim(),
+            NgaySinh: form.querySelector('#birth-date').value,
+            GioiTinh: form.querySelector('#gender').value,
+            SoNha: form.querySelector('#house-number').value.trim(),
+            Duong: form.querySelector('#street').value.trim(),
+            Quan: form.querySelector('#district').value.trim(),
+            ThanhPho: form.querySelector('#city').value.trim(),
+            SoDienThoai: form.querySelector('#phone').value.trim(),
+            NgayVaoLam: form.querySelector('#start-date').value,
+            NgayNghiViec: form.querySelector('#end-date').value || null,
+            MaChiNhanh: form.querySelector('#branch-code').value,
+            BoPhanLamViec: form.querySelector('#work-department').value,
+        };
+
+        if (!employeeData.HoTen || !employeeData.SoDienThoai || !employeeData.NgaySinh || !employeeData.NgayVaoLam) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+
+        addEmployee(employeeData);
+    });
+
+    // Hàm gọi API với rowsPerPage, page, branch và search
+    async function fetchData(rowsPerPage, page, branch, search) {
+        try {
+            const response = await fetch(`/company/employee/getAllEmployee?rowsPerPage=${rowsPerPage}&page=${page}&branch=${branch}&search=${search}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -63,7 +122,6 @@ document.addEventListener("DOMContentLoaded", function () {
             // Cập nhật nội dung bảng với dữ liệu mới
             tableBody.innerHTML = data.employees.map((employee, index) => `
                 <tr>
-                    <td><input type="checkbox" class="row-checkbox" data-id="${employee.id}"></td>
                     <td>${index + 1}</td> <!-- Bắt đầu từ 1 -->
                     <td>${employee.MaNhanVien}</td>
                     <td>${employee.HoTen}</td>
@@ -78,21 +136,27 @@ document.addEventListener("DOMContentLoaded", function () {
             maxPage = data.totalPages; // Cập nhật maxPage từ API
             totalPagesElement.textContent = maxPage;
 
-            addEditEventListeners();
+            addEditEventListeners(); // Thêm sự kiện cho nút Edit
 
         } catch (error) {
             console.error("Error fetching data:", error);
         }
     }
 
-    // Lắng nghe sự thay đổi của rowsPerPage
-    rowsPerPageSelect.addEventListener('change', function () {
-        const rowsPerPage = this.value;
-        const page = pageInput.value || 1; // Đảm bảo page bắt đầu từ 1
-        fetchData(rowsPerPage, page);
+    // Lắng nghe sự kiện nhấn nút "Search"
+    searchBtn.addEventListener("click", function () {
+        const branch = branchSelect.value; // Lấy giá trị của branch
+        const search = searchInput.value.trim(); // Lấy giá trị của search và loại bỏ khoảng trắng thừa
+
+        // Gọi hàm fetchData khi nút search được nhấn
+        fetchData(rowsPerPageSelect.value, pageInput.value, branch, search);
     });
 
-    // Lắng nghe sự thay đổi của page
+    // Lắng nghe sự thay đổi của Rows Per Page và Page
+    rowsPerPageSelect.addEventListener("change", function () {
+        fetchData(rowsPerPageSelect.value, pageInput.value, branchSelect.value, searchInput.value.trim());
+    });
+
     pageInput.addEventListener('input', function () {
         let page = parseInt(this.value);
 
@@ -105,10 +169,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         this.value = page; // Cập nhật giá trị của input để phản ánh page hợp lệ
 
-        const rowsPerPage = rowsPerPageSelect.value;
-        fetchData(rowsPerPage, page);
+        fetchData(rowsPerPageSelect.value, page, branchSelect.value, searchInput.value.trim());
     });
 
-    // Gọi fetchData lần đầu với giá trị mặc định
-    fetchData(rowsPerPageSelect.value, pageInput.value);
+    // Lần đầu tiên gọi API khi trang tải
+    // fetchData(rowsPerPageSelect.value, pageInput.value, branchSelect.value, searchInput.value.trim());
 });
