@@ -1,0 +1,325 @@
+<div class="container py-5">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-md-8">
+            <h1 class="text-center mb-4">Welcome to Our Restaurant</h1>
+        <!-- Filter Section -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <label for="area" class="form-label">Select Area:</label>
+                <select id="area" class="form-select" onchange="handleFilterChange()">
+                    {{#each areas}}
+                        <option value="{{MaKhuVuc}}" {{#eq ../selectedArea MaKhuVuc}}selected{{/eq}}>{{TenKhuVuc}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="branch" class="form-label">Select Branch:</label>
+                <select id="branch" class="form-select" onchange="handleFilterChange()">
+                    {{#each branches}}
+                        <option value="{{MaChiNhanh}}" {{#eq ../selectedBranch MaChiNhanh}}selected{{/eq}}>{{TenChiNhanh}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="category" class="form-label">Category:</label>
+                <select id="category" class="form-select" onchange="handleFilterChange()">
+                    {{#each categories}}
+                        <option value="{{Muc}}" {{#eq ../selectedCategory Muc}}selected{{/eq}}>{{Muc}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="searchQuery" class="form-label">Search:</label>
+                <input type="text" id="searchQuery" class="form-control" placeholder="Search foods..." 
+                       oninput="handleFilterChange()" value="{{q}}" />
+            </div>
+        </div>
+
+        <!-- Food Items Table -->
+        <h2>Food Items</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Food Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Description</th>
+                        <th>Images</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="foodItems">
+                    {{#each foods}}
+                    <tr>
+                        <td>{{TenMonAn}}</td>
+                        <td>{{Muc}}</td>
+                        <td>{{GiaHienTai}}</td>
+                        <td>{{MoTa}}</td>
+                        <td><img src="{{HinhAnh}}" alt="{{TenMonAn}}" style="width: 50px; height: 50px;"></td>
+                        <td><button class="btn btn-primary btn-sm" onclick="addToOrder('{{TenMonAn}}', {{GiaHienTai}})">Add</button></td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Food pagination">
+            <ul class="pagination">
+                <li class="page-item {{#unless (gt page 1)}}disabled{{/unless}}">
+                    <button class="page-link" onclick="loadPage(1)">First</button>
+                </li>
+                <li class="page-item {{#unless (gt page 1)}}disabled{{/unless}}">
+                    <button class="page-link" onclick="loadPage({{subtract page 1}})">Previous</button>
+                </li>
+                <li class="page-item">
+                    <button class="page-link" onclick="loadPage({{add page 1}})">Next</button>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Tables Section -->
+        <h2 class="mt-4">Tables</h2>
+        <div class="table-responsive">
+            <table id="tables" class="table table-bordered table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Table Number</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each tables}}
+                    <tr>
+                        <td>{{STT}}</td>
+                        <td>{{TrangThai}}</td>
+                        <td>
+                            {{#if (eq TrangThai "Trống")}}
+                                <button class="btn btn-success btn-sm" onclick="selectTable('{{STT}}')">Select</button>
+                            {{else}}
+                                <button class="btn btn-secondary btn-sm" disabled>Occupied</button>
+                            {{/if}}
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+
+    <!-- Order Sidebar -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header text-center">
+                <h4>Order</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Selected Table:</strong> <span id="selectedTable">None</span></p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Food</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderList">
+                        <tr>
+                            <td colspan="4" class="text-center">No items in order.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="text-end"><strong>Total:</strong> VND<span id="totalAmount">0</span></p>
+                <button class="btn btn-primary w-100" onclick="checkout()">Checkout</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let order = [];
+    let selectedTable = null;
+    let currentPage = {{page}};
+    const itemsPerPage = {{limit}};
+
+    function handleFilterChange() {
+        currentPage = 1; // Reset to page 1 whenever filter changes
+        loadPage(currentPage);
+    }
+
+    function loadPage(page) {
+        currentPage = page;
+        const area = document.getElementById('area').value;
+        const branch = document.getElementById('branch').value;
+        const category = document.getElementById('category').value;
+        const q = document.getElementById('searchQuery').value;
+
+        // Use fetch to dynamically update the page content
+        fetch(`/home?area=${area}&branch=${branch}&category=${category}&q=${q}&page=${page}&limit=${itemsPerPage}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Update food items
+            const foodItemsBody = document.getElementById('foodItems');
+            foodItemsBody.innerHTML = data.foods.map(food => `
+                <tr>
+                    <td>${food.TenMonAn}</td>
+                    <td>${food.Muc}</td>
+                    <td>${food.GiaHienTai}</td>
+                    <td>${food.MoTa}</td>
+                    <td><button class="btn btn-primary btn-sm" onclick="addToOrder('${food.TenMonAn}', ${food.GiaHienTai})">Add</button></td>
+                </tr>
+            `).join('');
+
+            // Update tables
+            const tablesBody = document.querySelector('#tables tbody');
+            tablesBody.innerHTML = data.tables.map(table => `
+                <tr>
+                    <td>${table.STT}</td>
+                    <td>${table.TrangThai}</td>
+                    <td>
+                        ${table.TrangThai === 'Trống' 
+                            ? `<button class="btn btn-success btn-sm" onclick="selectTable('${table.STT}')">Select</button>`
+                            : `<button class="btn btn-secondary btn-sm" disabled>Occupied</button>`}
+                    </td>
+                </tr>
+            `).join('');
+
+            // Update dropdowns to reflect current selections
+            document.getElementById('area').value = data.selectedArea;
+            document.getElementById('branch').value = data.selectedBranch;
+            document.getElementById('category').value = data.selectedCategory || 'all';
+            document.getElementById('searchQuery').value = data.q || '';
+
+            // Update pagination
+            currentPage = page;
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            alert('Failed to load data. Please try again.');
+        });
+    }
+
+    function addToOrder(foodName, price) {
+        const existingItem = order.find(item => item.foodName === foodName);
+        if (existingItem) {
+            existingItem.qty += 1;
+            existingItem.total = existingItem.qty * price;
+        } else {
+            order.push({ foodName, qty: 1, price, total: price });
+        }
+        updateOrderList();
+    }
+
+    function changeQty(foodName, delta) {
+        const item = order.find(item => item.foodName === foodName);
+        if (item) {
+            item.qty += delta;
+            if (item.qty <= 0) {
+                order = order.filter(i => i.foodName !== foodName);
+            } else {
+                item.total = item.qty * item.price;
+            }
+            updateOrderList();
+        }
+    }
+
+    function removeFromOrder(foodName) {
+        order = order.filter(item => item.foodName !== foodName);
+        updateOrderList();
+    }
+
+    function updateOrderList() {
+        const orderList = document.getElementById('orderList');
+        const totalAmount = document.getElementById('totalAmount');
+        orderList.innerHTML = '';
+        let total = 0;
+
+        order.forEach(item => {
+            total += item.total;
+            orderList.innerHTML += `
+                <tr>
+                    <td>${item.foodName}</td>
+                    <td>
+                        <button class="btn btn-sm btn-light" onclick="changeQty('${item.foodName}', -1)">-</button>
+                        ${item.qty}
+                        <button class="btn btn-sm btn-light" onclick="changeQty('${item.foodName}', 1)">+</button>
+                    </td>
+                    <td>${item.total}</td>
+                    <td><button class="btn btn-danger btn-sm" onclick="removeFromOrder('${item.foodName}')">Delete</button></td>
+                </tr>
+            `;
+        });
+
+        if (order.length === 0) {
+            orderList.innerHTML = '<tr><td colspan="4" class="text-center">No items in order.</td></tr>';
+        }
+
+        totalAmount.innerText = total.toFixed(2);
+    }
+
+    function selectTable(tableNumber) {
+        // Check if the same table is clicked again, then deselect it
+        if (selectedTable === tableNumber) {
+            selectedTable = null; // Deselect the table
+            document.getElementById('selectedTable').innerText = 'None'; // Update the UI
+        } else {
+            // Update the selected table and display it
+            selectedTable = tableNumber;
+            document.getElementById('selectedTable').innerText = tableNumber;
+        }
+
+        // Update the row colors for selected and unselected tables
+        const rows = document.querySelectorAll('#tables tbody tr');
+        rows.forEach(row => {
+            row.classList.remove('table-primary'); // Remove highlight from all rows
+            const status = row.cells[1].innerText.trim();
+            if (status === 'Trống') {
+        //       row.classList.add('table-secondary'); // Optional: add a "free" row style
+            } else {
+                row.classList.add('table-danger'); // Occupied row color
+            }
+        });
+
+        // Highlight the currently selected table row
+        if (selectedTable) {
+            const selectedRow = Array.from(rows).find(row => row.cells[0].innerText === selectedTable);
+            if (selectedRow) {
+                selectedRow.classList.add('table-primary'); // Apply color to selected row
+            }
+        }
+    }
+
+
+    function checkout() {
+        if (!selectedTable) {
+            alert('Please select a table!');
+            return;
+        }
+
+        if (order.length === 0) {
+            alert('Please add items to the order!');
+            return;
+        }
+
+        const orderData = {
+            table: selectedTable,
+            menu: order
+        };
+        debugger;
+        console.log('Sending order to backend:', orderData);
+
+        alert('Order sent successfully!');
+    }
+</script>

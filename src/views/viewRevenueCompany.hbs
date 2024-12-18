@@ -1,0 +1,50 @@
+<div id="app" class = "container">
+    <div class="row">
+        <h2>Company Revenue</h2>
+    
+        <!-- Dropdown chọn loại doanh thu -->
+        <div class="form-group">
+            <label for="type">Choose type of revenue:</label>
+            <select id="type" onchange="changeRevenueType()" class="form-select">
+                <option value="day" {{#if (eq selectedType 'day' )}}selected{{/if}}>Day</option>
+                <option value="month" {{#if (eq selectedType 'month' )}}selected{{/if}}>Month</option>
+                <option value="year" {{#if (eq selectedType 'year' )}}selected{{/if}}>Year</option>
+            </select>
+        </div>
+    
+        <!-- Hiển thị dữ liệu doanh thu -->
+        {{#if revenue.length}}
+        <h3>Revenue {{selectedType}}:</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date and time</th>
+                    <th>Revenue (VND)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each revenue}}
+                <tr>
+                    <td>
+                        {{#if this.Ngay}}{{this.Ngay}}{{/if}}
+                        {{#if this.Thang}}{{this.Thang}}/{{this.Nam}}{{/if}}
+                        {{#if this.Nam}}{{this.Nam}}{{/if}}
+                    </td>
+                    <td>{{this.DoanhThu}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        {{else}}
+        <p>No revenue record.</p>
+        {{/if}}
+        </div>
+</div>
+
+
+<script>
+    function changeRevenueType() {
+        const type = document.getElementById('type').value;
+        window.location.href = `/company/revenue/${type}`;
+    }
+</script>

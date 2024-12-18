@@ -15,6 +15,13 @@ const config = {
     connectionTimeout: 30000, // 30 giây
 };
 
+// Test database connection
+sql.connect(config).then(pool => {
+    console.log('Connected to database');
+}).catch(err => {
+    console.log('Database connection failed');
+    console.log(err);
+});
 
 module.exports ={
     connect: () => sql.connect(config),

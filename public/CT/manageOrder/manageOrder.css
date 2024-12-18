@@ -1,0 +1,134 @@
+.manageOrder-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.manage-order-title {
+  background-color: rgb(211, 211, 211);
+  border-radius: 5px;
+  display: flex;
+  width: 60%;
+  justify-content: space-around;
+  height: 100px;
+  align-items: center;
+  border: 1px solid rgb(202, 202, 202);
+}
+.direct-order,
+.online-order,
+.reservation-order {
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  border-radius: 5px;
+  width: 25%;
+  height: 40px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgb(114, 114, 114);
+  text-decoration: none;
+}
+.direct-order:hover,
+.online-order:hover,
+.reservation-order:hover {
+  background-color: rgb(133, 133, 133);
+  color: white;
+}
+.active {
+  background-color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+  border-radius: 5px;
+  width: 25%;
+  height: 40px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgb(114, 114, 114);
+  text-decoration: none;
+}
+.manage-order-body {
+  margin-top: 50px;
+  background-color: #ffffff;
+  width: 60%;
+  height: 100%;
+  border-radius: 5px;
+  border: 2px solid rgb(195, 195, 195);
+}
+.manage-order-header {
+  display: flex;
+  background-color: #eaeff2;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  width: 100%;
+  height: 70px;
+  align-items: center;
+  padding: 10px;
+  font-weight: bold;
+}
+.manage-order-footer {
+  background-color: #eaeff2;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+}
+.header-col-1 {
+  width: 10%;
+}
+.header-col-2 {
+  width: 10%;
+}
+.header-col-3 {
+  width: 40%;
+}
+.header-col-4 {
+  width: 10%;
+}
+.header-col-5 {
+  width: 20%;
+}
+.header-col-6 {
+  width: 10%;
+}
+
+.manage-order-content {
+  padding: 10px;
+}
+.order {
+  display: flex;
+  height: 30px;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 15%;
+  gap: 5px;
+}
+.order-current {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12%;
+}
+.prev-btn,
+.next-btn {
+  width: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(61, 61, 61);
+  border-radius: 5px;
+  text-decoration: none;
+  border: 1px solid rgb(143, 143, 143);
+}
+.prev-btn:hover,
+.next-btn:hover {
+  background-color: #2492d2;
+  color: rgb(255, 255, 255);
+}

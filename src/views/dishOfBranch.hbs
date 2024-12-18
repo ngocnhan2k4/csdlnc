@@ -3,6 +3,8 @@
     <i class="fas fa-map-marker"></i>
     Sushi
     {{nameArea}}
+    - 
+    {{nameBranch}}
     brand
   </div>
 
@@ -16,7 +18,7 @@
         <div class="card-body">
          <hr>
           {{#each type}}
-          <a href='/company/dish/byarea/{{MaKhuVuc}}?index={{Muc}}&page=1&limit=3' class="custom-link">
+          <a href='/company/dish/byarea/{{../areaID}}?index={{Muc}}&page=1&limit=3' class="custom-link">
             <div class="type">{{Muc}}</div>
           </a>
           {{/each}}
@@ -27,7 +29,7 @@
         {{#each branchs}}
 
           <div class="branch">
-            <a href="/company/dish/bybranch/{{MaChiNhanh}}?areaID={{KhuVuc}}&page=1&limit=3" >{{TenChiNhanh}}</a>
+            <a href="/company/dish/bybranch/{{MaChiNhanh}}?areaID={{KhuVuc}}&page=2&limit=3" >{{TenChiNhanh}}</a>
           </div>
           
         {{/each}}
@@ -67,47 +69,23 @@
   </div>
 
  
-    
-{{!-- 
-     <div class="pagination">
-      {{#if (gt currentPage 1)}}
-        <a
-          href="/company/dish/byarea/{{areaID}}?index={{currentIndex}}&page={{dec currentPage}}&limit=3"
-          class="prev-page"
-        >Previous</a>
-      {{/if}}
-
-      {{#each totalPages}}
-        <a href="/company/dish/byarea/{{areaID}}?index={{currentIndex}}&page={{this}}&limit=3" class="{{#if (eq this currentPage)}}active{{/if}}">
-          {{this}}
-        </a>
-      {{/each}}
-
-      {{#if (lt currentPage totalPages)}}
-        <a
-          href="/company/dish/byarea/{{areaID}}?index={{currentIndex}}&page={{inc currentPage}}&limit=3"
-          class="next-page"
-        >Next</a>
-      {{/if}}
-    </div> --}}
-
     <div class="pagination">
       {{#if (gt currentPage 1)}}
-       
-          <a href="?index={{currentIndex}}&page={{sub currentPage 1}}&limit=3" class="page-link">Previous</a>
+          <a href="?areaID={{areaID}}&page={{sub currentPage 1}}&limit=3" class="page-link">Previous</a>
       {{/if}}
 
       {{#each (range 1 totalPages)}}
           {{#if (eq this ../currentPage)}}
               <span class="page-link active">{{this}}</span>
           {{else}}
-              <a href="?index={{../currentIndex}}&page={{this}}&limit=3" class="page-link">{{this}}</a>
+             <a href="?areaID={{../areaID}}&page={{this}}&limit=3" class="page-link">{{this}}</a>
           {{/if}}
       {{/each}}
 
       {{#if (lt currentPage totalPages)}}
-          <a href="?index={{currentIndex}}&page={{add currentPage 1}}&limit=3" class="page-link">Next</a>
-       
+          <a href="?areaID={{areaID}}&page={{add currentPage 1}}&limit=3" class="page-link">Next</a>
       {{/if}}
+      
     </div>
+
 </div>
