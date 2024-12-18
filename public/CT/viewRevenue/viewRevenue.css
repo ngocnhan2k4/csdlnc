@@ -1,0 +1,72 @@
+/* General container style */
+.container {
+    margin-top: 20px;
+}
+
+/* CSS cho form group */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Label styling */
+label {
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+    /* Màu chữ của label */
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* Dropdown styling */
+.form-select {
+    width: 100%;
+    /* Chiếm toàn bộ chiều ngang */
+    padding: 10px;
+    /* Thêm khoảng cách bên trong */
+    font-size: 14px;
+    /* Cỡ chữ phù hợp */
+    color: #333;
+    /* Màu chữ của dropdown */
+    background-color: #fff;
+    /* Nền trắng */
+    border: 1px solid #ccc;
+    /* Viền xám nhẹ */
+    border-radius: 5px;
+    /* Bo góc nhẹ */
+    appearance: none;
+    /* Tùy chỉnh icon mũi tên (browser default) */
+    outline: none;
+    /* Xóa viền xanh khi focus */
+    transition: border-color 0.3s ease;
+}
+
+/* Dropdown khi hover hoặc focus */
+.form-select:hover {
+    border-color: #007bff;
+    /* Đổi màu viền khi hover */
+}
+
+.form-select:focus {
+    border-color: #007bff;
+    /* Màu viền khi focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    /* Hiệu ứng đổ bóng */
+}
+
+/* Các tùy chọn trong dropdown */
+.form-select option {
+    color: #333;
+    /* Màu chữ của từng tùy chọn */
+    background-color: #fff;
+    /* Nền trắng */
+    font-size: 14px;
+    /* Cỡ chữ */
+    padding: 10px;
+    /* Khoảng cách bên trong */
+}
+
+/* Placeholder style (nếu có giá trị rỗng) */
+.form-select option:empty {
+    color: #aaa;
+}
