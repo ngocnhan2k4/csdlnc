@@ -24,10 +24,12 @@ app.engine('hbs', expressHandlebars.engine({
     helpers: {
         eq: (a, b) => a === b,
         gt: (a, b) => a > b,
-        lt: (a, b) => a < b,
+
         dec: (a) => a - 1,
         inc: (a) => a + 1,
+
         lt: (a, b) => a < b, 
+        
         subtract: (a, b) => a - b,
         add: (a, b) => a + b,
         sub: (a, b) => a - b,
