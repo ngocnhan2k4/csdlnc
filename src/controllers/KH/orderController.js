@@ -41,22 +41,22 @@ const orderController ={
     },
     creatDeliveryFood: async (req,res)=>{ //mặc định nhânvienlập là 1
         const pool = await dbService.connect();
-        const { NgayLap, ThoiGianGiao, DiaChi, SoDienThoai, TrangThai } = req.body;
+        const { NgayLap, ThoiGianGiao, DiaChi, SoDienThoai, TrangThai, MaNhanVien } = req.body;
         const query = `
         EXEC sp_ThemPhieuDatGiaoHang
             @NgayLap = '${NgayLap}',
-            @NhanVienLap = 1,
+            @NhanVienLap = ${MaNhanVien} || 1,
             @ThoiGianGiao = '${ThoiGianGiao}',
             @DiaChi = N'${DiaChi}',
             @SoDienThoai = '${SoDienThoai}',
             @TrangThai = N'${TrangThai}'
-    `;
+        `;
 
-    const result = await pool.request().query(query);
-        res.status(200).json({
-            message: 'Phiếu đặt giao hàng đã được tạo thành công.',
-            
-        });
+        const result = await pool.request().query(query);
+            res.status(200).json({
+                message: 'Phiếu đặt giao hàng đã được tạo thành công.',
+                
+            });
     },
 
     getArea: async (req, res) => {
@@ -230,24 +230,24 @@ const orderController ={
     },
     creatOnlineFood: async (req,res)=>{ //mặc định nhânvienlập là 1
         const pool = await dbService.connect();
-        const { NgayLap, MaChiNhanh, SoLuongKhach, NgayDat, GioDen, GhiChu, MaBan} = req.body;
+        const { NgayLap, MaChiNhanh, SoLuongKhach, NgayDat, GioDen, GhiChu, MaBan, MaNhanVien} = req.body;
         const query = `
         EXEC sp_ThemPhieuDatOnline
             @NgayLap = '${NgayLap}',
-            @NhanVienLap = 1,
+            @NhanVienLap = ${MaNhanVien} || 1,
             @MaChiNhanh = ${MaChiNhanh},
             @SoLuongKhach = ${SoLuongKhach},
             @NgayDat = '${NgayDat}',
             @GioDen = '${GioDen}',
             @GhiChu = N'${GhiChu}',
             @MaBan = ${MaBan}
-    `;
+        `;
 
-    const result = await pool.request().query(query);
-        res.status(200).json({
-            message: 'Phiếu đặt bàn đã được tạo thành công.',
-            
-        });
+        const result = await pool.request().query(query);
+            res.status(200).json({
+                message: 'Phiếu đặt bàn đã được tạo thành công.',
+                
+            });
     },
 
     getFreeTableOfBranch: async (req, res) => {

@@ -170,6 +170,8 @@
                         </div>
                     </div>
 
+                   <div id="dynamicForm"></div>
+
                     <button class="btn btn-primary w-100" onclick="checkout()">Checkout</button>
                 </div>
             </div>
@@ -208,6 +210,7 @@
     function handleFilterChange() {
         currentPage = 1; // Reset to page 1 whenever filter changes
         loadPage(currentPage);
+        handleOrderTypeChange()
     }
 
     function loadPage(page) {
@@ -235,6 +238,8 @@
         // Update the browser's URL without reloading the page
         const newUrl = `/home?${queryParams.toString()}`;
         window.history.pushState(null, '', newUrl); // Use replaceState to avoid adding to history stack
+        // move to another page
+        
 
         // Use fetch to dynamically update the page content
         fetch(newUrl, {
@@ -253,23 +258,11 @@
                     <td>${food.GiaHienTai}</td>
                     <td>${food.MoTa}</td>
                     <td><img src="${food.HinhAnh}" alt="${food.TenMonAn}" style="width: 50px; height: 50px;"></td>
-                    <td><button class="btn btn-primary btn-sm" onclick="addToOrder('${food.TenMonAn}', ${food.GiaHienTai})">Add</button></td>
+                    <td><button class="btn btn-primary btn-sm" onclick="addToOrder('${food.MaMonAn}', '${food.TenMonAn}', ${food.GiaHienTai})">Add</button></td>
                 </tr>
             `).join('');
 
-            // Update tables
-            const tablesBody = document.querySelector('#tables tbody');
-            tablesBody.innerHTML = data.tables.map(table => `
-                <tr class="${table.TrangThai === 'Trống' ? '' : 'table-danger'}">
-                    <td>${table.STT}</td>
-                    <td>${table.TrangThai}</td>
-                    <td>
-                        ${table.TrangThai === 'Trống' 
-                            ? `<button class="btn btn-success btn-sm" onclick="selectTable('${table.STT}')">Select</button>` 
-                            : `<button class="btn btn-secondary btn-sm" disabled>Occupied</button>`}
-                    </td>
-                </tr>
-            `).join('');
+            
 
             // Render pagination
             renderPagination(data.page, data.totalPages);
@@ -281,7 +274,34 @@
             document.getElementById('searchQuery').value = data.q || '';
             document.getElementById('sortByPrice').value = data.sortByPrice || 'asc';
             document.getElementById('orderType').value = data.orderType || 'O';
-            userId = data.userId;
+            
+
+            // Update branches dropdown
+            debugger;
+            const branchDropdown = document.getElementById('branch');
+            const selectedBranchInt = parseInt(data.selectedBranch, 10);
+            console.log("data.selectedBranch: ", selectedBranchInt);
+            branchDropdown.innerHTML = data.branches.map(branch => `
+                <option value="${branch.MaChiNhanh}" ${parseInt(branch.MaChiNhanh, 10) === selectedBranchInt ? 'selected' : ''}>
+                    ${branch.TenChiNhanh}
+                </option>
+            `).join('');
+
+            // Update tables
+            const tablesBody = document.querySelector('#tables tbody');
+            tablesBody.innerHTML = data.tables.map(table => `
+                <tr class="${table.TrangThai === "Trống" ? '' : 'table-danger'}">
+                    <td>${table.STT}</td>
+                    <td>${table.TrangThai}</td>
+                    <td>
+                        ${table.TrangThai === "Trống" 
+                            ? `<button class="btn btn-success btn-sm" onclick="selectTable('${table.STT}')">Select</button>` 
+                            : `<button class="btn btn-secondary btn-sm" disabled>Occupied</button>`}
+                    </td>
+                </tr>
+            `).join('');
+            
+            
             cardInfo = data.cardInfo;
             // Update card type
             if (cardInfo && userRole === 'customer') {
@@ -293,8 +313,23 @@
             console.error('Error fetching data:', error);
             alert('Failed to load data. Please try again.');
         });
-}
+    }
 
+    function updateTable(data) {
+        // Update tables
+        const tablesBody = document.querySelector('#tables tbody');
+        tablesBody.innerHTML = data.tables.map(table => `
+            <tr class="${table.TrangThai === 'Trống' ? '' : 'table-danger'}">
+                <td>${table.STT}</td>
+                <td>${table.TrangThai}</td>
+                <td>
+                    ${table.TrangThai === 'Trống' 
+                        ? `<button class="btn btn-success btn-sm" onclick="selectTable('${table.STT}')">Select</button>` 
+                        : `<button class="btn btn-secondary btn-sm" disabled>Occupied</button>`}
+                </td>
+            </tr>
+        `).join('');
+    }
 
     function renderPagination(page, totalPages) {
         const pagination = document.getElementById('pagination');
@@ -324,13 +359,13 @@
         `;
     }
 
-    function addToOrder(foodName, price) {
+    function addToOrder(MaMonAn, foodName, price) {
         const existingItem = order.find(item => item.foodName === foodName);
         if (existingItem) {
             existingItem.qty += 1;
             existingItem.total = existingItem.qty * price;
         } else {
-            order.push({ foodName, qty: 1, price, total: price });
+            order.push({MaMonAn, foodName, qty: 1, price, total: price });
         }
         updateOrderList();
     }
@@ -420,7 +455,53 @@
         }
     }
 
+    function handleOrderTypeChange() {
+        const orderType = document.getElementById('orderType').value;
+        const dynamicForm = document.getElementById('dynamicForm');
+        
+        if (orderType === 'G') {
+            dynamicForm.innerHTML = `
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" id="address" class="form-control" placeholder="Enter Address">
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone</label>
+                    <input type="text" id="phone" class="form-control" placeholder="Enter Phone">
+                </div>
+                <div class="mb-3">
+                    <label for="timeDelivery" class="form-label">Time Delivery</label>
+                    <input type="datetime-local" id="timeDelivery" class="form-control">
+                </div>
+            `;
+        } else if (orderType === 'O') {
+            dynamicForm.innerHTML = `
+                <div class="mb-3">
+                    <label for="amountOfPeople" class="form-label">Amount Of People</label>
+                    <input type="number" id="amountOfPeople" class="form-control" placeholder="Enter Amount Of People">
+                </div>
+                <div class="mb-3">
+                    <label for="note" class="form-label">Note</label>
+                    <input type="text" id="note" class="form-control" placeholder="Enter Note">
+                </div>
+                <div class="mb-3">
+                    <label for="dateOrder" class="form-label">Date Order</label>
+                    <input type="date" id="dateOrder" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="timeOrder" class="form-label">Time Order</label>
+                    <input type="time" id="timeOrder" class="form-control">
+                </div>
+            `;
+        } else {
+            dynamicForm.innerHTML = ''; // Clear the form if no order type is selected
+        }
+    }
+
+
     async function checkout() {
+        const orderType = document.getElementById('orderType').value;
+
         if (!selectedTable) {
             alert('Please select a table!');
             return;
@@ -443,24 +524,73 @@
                 return;
             }
         }
-
-        // If all validations pass, send the order to the backend
-        // If userRole is branch, send the employeeId and cardNumber as well
-
         
         const orderData = {
-            table: selectedTable,
+            tableNumber: selectedTable,
             menu: order,
             userId: userId,
             userRole: userRole,
+            employeeId: 1,
+            orderType: document.getElementById('orderType').value,
+            branchId: document.getElementById('branch').value,
         };
+
+        console.log("orderData: ", orderData);
 
         if (userRole === 'branch') {
             orderData.employeeId = document.getElementById('employeeId').value;
-            orderData.cardNumber = document.getElementById('cardNumber').value;
+            orderData.userId = document.getElementById('cardNumber').value;
         }
+        
+        if (orderType === "G") {
+            orderData.address = document.getElementById('address').value;
+            orderData.phone = document.getElementById('phone').value;
+            orderData.timeDelivery = document.getElementById('timeDelivery').value;
+
+            if (!orderData.address) {
+                alert('Please enter the address!');
+                return;
+            }
+
+            if (!orderData.phone) {
+                alert('Please enter the phone number!');
+                return;
+            }
+
+            if (!orderData.timeDelivery) {
+                alert('Please enter the time delivery!');
+                return;
+            }
+        }
+        else if (orderType === "O") {
+            orderData.amountOfPeople = document.getElementById('amountOfPeople').value;
+            orderData.note = document.getElementById('note').value;
+            orderData.dateOrder = document.getElementById('dateOrder').value;   
+            orderData.timeOrder = document.getElementById('timeOrder').value;
+
+            if (!orderData.amountOfPeople) {
+                alert('Please enter the amount of people!');
+                return;
+            }
+
+            if (!orderData.note) {
+                alert('Please enter the note!');
+                return;
+            }
+
+            if (!orderData.dateOrder) {
+                alert('Please enter the date order!');
+                return;
+            }
+
+            if (!orderData.timeOrder) {
+                alert('Please enter the time order!');
+                return;
+            }
+        }
+
         debugger;
-        const response = await fetch('home/processOrder', {
+        const response = await fetch('/home/processOrder', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData),
@@ -469,7 +599,12 @@
         const result = await response.json();
 
         if (response.ok) {
-            alert(result.message);
+            alert(result.message + 
+            ' Your order number is: ' + result.data.MaPhieuDat + '.' + 
+            ' Total: ' + result.data.TongTien + ' VND' +
+            ' Discount: ' + result.data.TienGiam + ' VND' +
+            ' Final Total: ' + result.data.ThanhTien + ' VND'
+            );
         } else {
             alert(result.message);
         }
