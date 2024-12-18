@@ -8,7 +8,10 @@ router.post('/created', employeeController.createEmployee); // create employee
 router.put('/updated', employeeController.updateEmployee); // update employee
 router.delete('/deleted', employeeController.deleteEmployee); // delete employee
 router.put('/reassign', employeeController.reassignEmployee); // reassign employee
-router.get('/', employeeController.getAllEmployee); // get all employee
+
+router.get('/getAllEmployee', employeeController.getAllEmployeeJS); // get all employee
+
+router.get('/', employeeController.manageEmployee);
 
 
 module.exports = router;

@@ -6,6 +6,7 @@ const config = {
     user:process.env.DB_USER,
     password:process.env.DB_PASSWORD,
     database:process.env.DB_DATABASE,
+    // port: 3000,
     options: {
         trustedConnection: true,
         enableArithAbort: true,

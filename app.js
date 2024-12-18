@@ -38,7 +38,38 @@ app.engine('hbs', expressHandlebars.engine({
                 result.push(i);
             }
             return result;
-        }
+        },
+        addOne: (value) => value + 1,
+        range: (from, to, options) => {
+            let result = '';
+            // Chắc chắn rằng options.fn được gọi đúng
+            for (let i = from; i <= to; i++) {
+                result += options.fn({ number: i });  // Truyền đúng đối tượng vào
+            }
+            return result;
+        },
+        paginationRange: (currentPage, totalPages, maxVisiblePages, options) => {
+            const range = [];
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+        
+            // Điều chỉnh lại startPage và endPage khi gần rìa
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+        
+            for (let i = startPage; i <= endPage; i++) {
+                range.push(i);
+            }
+        
+            // Đảm bảo options.fn được gọi đúng
+            let result = '';
+            range.forEach((page) => {
+                result += options.fn({ number: page });
+            });
+        
+            return result;
+        },
     }
 }));
 

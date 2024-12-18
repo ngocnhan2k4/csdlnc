@@ -1,0 +1,78 @@
+.form-container {
+    max-width: 350px; /* Giảm chiều rộng của form */
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+.form-group {
+    margin-bottom: 12px; /* Giảm khoảng cách giữa các form group */
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 4px; /* Giảm khoảng cách giữa label và input */
+    font-size: 13px; /* Giảm kích thước font */
+    color: #000;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 6px; /* Giảm padding của input */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 8px; /* Giảm khoảng cách giữa các nút */
+    margin-top: 20px; /* Giảm khoảng cách trên cùng */
+}
+
+.btn {
+    padding: 8px 20px; /* Giảm kích thước padding của nút */
+    border: none;
+    border-radius: 20px; /* Giảm góc bo tròn */
+    cursor: pointer;
+    font-size: 14px; /* Giảm kích thước font */
+}
+
+.update-btn {
+    background-color: #2FB344;
+    color: white;
+}
+
+.update-btn:hover {
+    background-color: #27963A;
+}
+
+.cancel-btn {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.cancel-btn:hover {
+    background-color: #e6e6e6;
+}
+
+#add-employee-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+#add-employee-modal .bg-white {
+    width: 100%; /* Chiếm 100% chiều rộng của phần tử cha */
+    max-width: 700px; /* Giảm chiều rộng tối đa của modal */
+    padding: 20px; /* Giảm padding của modal */
+    border-radius: 8px; /* Bo tròn các góc */
+}
+
+.hidden {
+    display: none;
+}
