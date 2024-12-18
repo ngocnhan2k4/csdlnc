@@ -1,0 +1,74 @@
+<div id="app" class="container">
+    <div class="row">
+        <h2>Dish Revenue</h2>
+
+        <!-- Dropdown for selecting revenue type -->
+        <div class="form-group">
+            <label for="type">Choose type of revenue:</label>
+            <select id="type" v-model="type" class="form-select">
+                <option value="day">Day</option>
+                <option value="month">Month</option>
+                <option value="year">Year</option>
+            </select>
+        </div>
+
+        <!-- Input fields for date, month, and year -->
+        <div class="form-group mt-3" v-if="type === 'day'">
+            <label for="date">Select Date:</label>
+            <input type="date" id="date" v-model="date" class="form-control">
+        </div>
+        <div class="form-group mt-3" v-if="type === 'month'">
+            <label for="month">Select Month:</label>
+            <input type="number" id="month" v-model="month" min="1" max="12" class="form-control">
+            <label for="year" class="mt-2">Select Year:</label>
+            <input type="number" id="year" v-model="year" min="2000" class="form-control">
+        </div>
+        <div class="form-group mt-3" v-if="type === 'year'">
+            <label for="year">Select Year:</label>
+            <input type="number" id="year" v-model="year" min="2000" class="form-control">
+        </div>
+
+        <!-- Sorting options -->
+        <div class="form-group mt-3">
+            <label for="sortType">Sort By Revenue:</label>
+            <select id="sortType" v-model="sortType" class="form-select">
+                <option value="ASC">Ascending</option>
+                <option value="DESC">Descending</option>
+            </select>
+        </div>
+
+        <!-- Submit Button to trigger the fetchRevenue function -->
+        <div class="form-group mt-3">
+            <button class="btn btn-primary" @click="fetchRevenue">Submit</button>
+        </div>
+
+        <!-- Table to display revenue data -->
+        <div class="mt-4">
+            <h3>Revenue Data:</h3>
+            <table class="table table-striped" v-if="dishes.length">
+                <thead>
+                    <tr>
+                        <th>Dish Name</th>
+                        <th>Quantity Sold</th>
+                        <th>Total Revenue (VND)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="dish in dishes" :key="dish.MaMonAn">
+                        <td>{{ dish.TenMonAn }}</td>
+                        <td>{{ dish.SoLuong }}</td>
+                        <td>{{ dish.DoanhThu }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p v-else>No data found for the selected period.</p>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="mt-3">
+            <button class="btn btn-secondary" @click="prevPage" :disabled="page === 1">Previous</button>
+            <span>Page {{ page }} of {{ totalPages }}</span>
+            <button class="btn btn-secondary" @click="nextPage" :disabled="page === totalPages">Next</button>
+        </div>
+    </div>
+</div>

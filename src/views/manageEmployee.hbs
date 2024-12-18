@@ -1,0 +1,123 @@
+<div class="w-full max-w-6xl mx-auto p-4 space-y-4">
+    <div class="flex justify-between items-center mb-4">
+        <!-- Thêm phần chọn chi nhánh -->
+        <div class="flex items-center gap-2">
+            <select id="branch-select" class="border rounded p-2">
+                <option value="">All Branches</option>
+                {{#each branches}}
+                <option value="branch1">{{this.TenChiNhanh}}</option>
+                {{/each}}
+            </select>
+            <input type="text" placeholder="Search..." class="search-input border rounded p-2">
+        </div>
+        <button class="add-employee-btn">Add employee</button>
+    </div>
+
+    <div class="border rounded-md">
+        <table class="employee-table">
+            <thead>
+                <tr>
+                    <th class="w-12">
+                        <input type="checkbox" id="select-all">
+                    </th>
+                    <th class="w-12">#</th>
+                    <th>ID</th>
+                    <th>NAME</th>
+                    <th>DEPARTMENT</th>
+                    <th>START DATE</th>
+                    <th>END DATE</th>
+                    <th class="w-24"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each allEmployee}}
+                <tr>
+                    <td>
+                        <input type="checkbox" class="row-checkbox" data-id="{{this.id}}">
+                    </td>
+                    <td>{{addOne @index}}</td>
+                    <td>{{this.MaNhanVien}}</td>
+                    <td>{{this.HoTen}}</td>
+                    <td>{{this.TenBoPhan}}</td>
+                    <td>{{this.NgayVaoLam}}</td>
+                    <td>{{this.NgayNghiViec}}</td>
+                    <td>
+                        <button class="edit-btn">Edit</button>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="flex items-center justify-between py-4">
+        <div class="flex justify-end items-center gap-4 p-2">
+            <!-- Rows Per Page -->
+            <div class="flex items-center gap-2">
+                <label for="rowsPerPage">Rows per page:</label>
+                <select id="rowsPerPage" class="border rounded p-1">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                </select>
+            </div>            
+        </div>
+        <!-- Pagination -->
+        <div id="pagination">
+        <span>Page 
+            <input type="number" id="pageInput" value="1" min="1" /> 
+            / <span id="totalPages">{{totalPages}}</span>
+        </span>
+    </div>
+    </div>
+</div>
+
+<!-- Popup Modal -->
+<div id="add-employee-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-md shadow-lg w-full max-w-md">
+        <h2 class="text-xl font-semibold mb-4">Add Employee</h2>
+        <form id="add-employee-form" class="space-y-4">
+            <div class="form-group">
+                <label for="employee-id" class="block text-sm font-medium">Employee ID</label>
+                <input type="text" id="employee-id" name="employee-id" class="w-full border rounded p-2">
+            </div>
+
+            <div class="form-group">
+                <label for="full-name" class="block text-sm font-medium">Full name</label>
+                <input type="text" id="full-name" name="full-name" class="w-full border rounded p-2">
+            </div>
+
+            <div class="form-group">
+                <label for="birth-date" class="block text-sm font-medium">Date of birth</label>
+                <input type="date" id="birth-date" name="birth-date" class="w-full border rounded p-2">
+            </div>
+
+            <div class="form-group">
+                <label for="phone" class="block text-sm font-medium">Phone number</label>
+                <input type="tel" id="phone" name="phone" class="w-full border rounded p-2">
+            </div>
+
+            <div class="form-group">
+                <label for="address" class="block text-sm font-medium">Address</label>
+                <input type="text" id="address" name="address" class="w-full border rounded p-2">
+            </div>
+
+            <div class="form-group">
+                <label for="start-date" class="block text-sm font-medium">Start date</label>
+                <input type="date" id="start-date" name="start-date" class="w-full border rounded p-2">
+            </div>
+
+            <div class="form-group">
+                <label for="end-date" class="block text-sm font-medium">End date</label>
+                <input type="date" id="end-date" name="end-date" class="w-full border rounded p-2">
+            </div>
+
+            <!-- Button Group -->
+            <div class="flex justify-end gap-2">
+                <button type="button" class="btn cancel-btn bg-gray-400 text-white px-4 py-2 rounded">Cancel</button>
+                <button type="submit" class="btn update-btn bg-blue-500 text-white px-4 py-2 rounded">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
