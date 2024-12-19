@@ -42,14 +42,16 @@ app.engine('hbs', expressHandlebars.engine({
         subtract: (a, b) => a - b,
         add: (a, b) => a + b,
         sub: (a, b) => a - b,
-        range: (start, end) => {
+        range_minh: (start, end) => {
             let result = [];
             for (let i = start; i <= end; i++) {
                 result.push(i);
             }
             return result;
         },
+
         addOne: (value) => value + 1,
+
         range: (from, to, options) => {
             let result = '';
             // Chắc chắn rằng options.fn được gọi đúng
@@ -80,6 +82,8 @@ app.engine('hbs', expressHandlebars.engine({
         
             return result;
         },
+
+        increment: (index) => index + 1 // Helper mới
     }
 }));
 
