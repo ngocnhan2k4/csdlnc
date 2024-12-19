@@ -116,7 +116,7 @@ const authController = {
             if (result1.recordset.length > 0) {
                 req.session.userRole = 'branch'; // Store role in session
                 // Store branch ID in session
-                req.session.userID = result1.recordset[0].MaChiNhanh;
+                req.session.userId = result1.recordset[0].MaChiNhanh;
                 return res.status(200).json({ message: "Đăng nhập thành công với tu cách là Chi nhánh!", data: result1.recordset[0], code: 2});
             }
 
@@ -132,8 +132,9 @@ const authController = {
 
             if (result.recordset.length > 0) {
                 req.session.userRole = 'customer'; // Store role in session
+                console.log('result: ', result.recordset[0]);
                 // Store customer ID in session
-                req.session.userID = result.recordset[0].MaTheKhachHang;
+                req.session.userId = result.recordset[0].MaTheKhachHang;
                 // Store type of card in session
                 req.session.cardType = result.recordset[0].LoaiThe;
                 return res.status(200).json({ message: "Đăng nhập thành công với tư cách là khách hàng!", data: result.recordset[0], code: 3 });

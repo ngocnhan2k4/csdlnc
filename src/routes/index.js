@@ -15,8 +15,8 @@ const employeeCompanyRouter = require("./CT/employeeRoute.js")
 const manageFoodRouter = require("./CT/manageFoodRouter.js")
 
 const authRouter = require("./Auth/authRoute.js");
-const homeController = require("../controllers/KH/homeController.js");
-const router = require("express").Router();
+
+const homeRouter = require("./homeRouter.js");
 
 function route(app) {
     //Auth
@@ -29,8 +29,8 @@ function route(app) {
         }
         next();
     });
-    app.use("/home", homeController.homeController);
-    router.post("/home/processOrder", homeController.processOrder);
+    
+    app.use("/home", homeRouter);
 
 
     //KH

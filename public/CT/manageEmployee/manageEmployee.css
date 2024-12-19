@@ -75,6 +75,17 @@
     background-color: #2563eb;
 }
 
+.search-btn {
+    background-color: #3b82f6;
+    color: #fff;
+    padding: 0.4rem 1rem;
+    border-radius: 0.25rem;
+}
+
+.search-btn:hover {
+    background-color: #2563eb;
+}
+
 .border {
     border: 1px solid #e2e8f0;
 }
