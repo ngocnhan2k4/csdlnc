@@ -1,0 +1,37 @@
+<div class="review-container">
+
+    <div class="back-button">
+        <a href="/company/order" class="btn btn-secondary">
+          <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+      </div>
+
+    <div class="reveiw">
+        <div class="review-header">
+            <div class="code">Mã Đánh Giá</div>
+            <div class="bill">Mã hóa đơn</div>
+            <div class="service">Điểm phục vụ</div>
+            <div class="position">Điểm vị trí</div>
+            <dic class="quanlity">Điểm chất lượng</dic>
+            <div class="money">Điểm giá cả</div>
+            <div class="space">Điểm không gian</div>
+            <div class="comment">Bình luận</div>
+        </div>
+        <div class="review-body">
+            {{#each reviews}}
+
+            <div class="code">{{MaDanhGia}}</div>
+            <div class="bill">{{MaHoaDon}}</div>
+            <div class="service">{{DiemPhucVu}}</div>
+            <div class="position">{{DiemViTri}}</div>
+            <dic class="quanlity">{{DiemChatLuongMonAn}}</dic>
+            <div class="money">{{DiemGiaCa}}</div>
+            <div class="space">{{DiemKhongGian}}</div>
+            <div class="comment">{{BinhLuan}}</div>
+            {{/each}}
+        </div>
+         
+    </div>
+    <button class="btn-review">Xóa đánh giá</button>
+    
+</div>

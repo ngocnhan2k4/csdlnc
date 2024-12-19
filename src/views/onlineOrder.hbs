@@ -6,7 +6,13 @@
   </div>
 
   <div class="manage-order-body">
-    <div class="manage-order-header">
+    <div class="back-button">
+        <a href="/company/order" class="btn btn-secondary">
+          <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+      </div>
+    
+    <div class="manage-order-header mt-3">
       <div class="header-col-1">
         #
       </div>
@@ -26,16 +32,19 @@
       <div class="header-col-6">
         CASHIER
       </div>
+      <div class="header-col-7">
+        VIEW
+      </div>
     </div>
     <div class="manage-order-content">
       {{#each orders}}
         <div class="order">
-
-          <div class="header-col-1">#</div>
-          <div class="header-col-2">{{MaPhieuDat}}</div>
-           <div class="header-col-3">{{NgayLap}}</div>
+          <div class="header-col-1">{{increment @index}}</div>
+          <div class="header-col-2">{{MaHoaDon}}</div>
+          <div class="header-col-3">{{NgayLap}}</div>
           <div class="header-col-5">{{TongTien}}</div>
-           <div class="header-col-6">{{HoTen}}</div>
+          <div class="header-col-6">{{HoTen}}</div>
+          <div class="header-col-6"> <a href="/company/order/evaluation/{{MaHoaDon}}"> <button class="btn-view">View</button></a></div>
         </div>
         <hr />
       {{/each}}

@@ -13,7 +13,7 @@ const orderController = {
             // Lấy dữ liệu từ cơ sở dữ liệu
             const result = await pool.request()
                 .query(`
-                    select pd.MaPhieuDat ,pd.NgayLap, hd.TongTien, nv.HoTen
+                    select hd.MaHoaDon , hd.NgayLap , hd.TongTien, nv.HoTen
                     from PhieuDat pd join HoaDon hd on hd.MaPhieuDat = pd.MaPhieuDat  
                     join NhanVien nv on nv.MaNhanVien = hd.NhanVienLap 
                     ORDER BY hd.MaHoaDon
@@ -70,7 +70,7 @@ const orderController = {
         const offset = (page - 1) * limit;  
         const result = await pool.request()
             .query(`
-                select pd.MaPhieuDat ,pd.NgayLap, hd.TongTien, nv.HoTen
+                select hd.MaHoaDon ,pd.NgayLap, hd.TongTien, nv.HoTen
                 from PhieuDat pd join HoaDon hd on hd.MaPhieuDat = pd.MaPhieuDat  
                 join NhanVien nv on nv.MaNhanVien = hd.NhanVienLap 
                 where pd.Loai='${Loai}'
@@ -163,7 +163,16 @@ const orderController = {
             .query(`
                 select * from DanhGiaDichVu where MaHoaDon=${MaHoaDon};
             `);
-        res.status(200).json(result.recordset);
+
+        res.render('viewOrder', {
+            title: 'View Order',
+            reviews:result.recordset,
+            customHead: `
+            <link rel="stylesheet" href="/CT/manageOrder/viewOrder.css">
+            <script defer src="/CT/manageOrder/viewOrder.js"></script>
+            `,
+        });
+
     },
 
     getAllOrderByBranch: async (req, res) => {
@@ -172,16 +181,47 @@ const orderController = {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const offset = (page - 1) * limit;  
+        const min = offset +1;
+        const max = min + limit-1;
+
+        const totalOrder = await pool.request() 
+            .query(`
+                select count(*)
+                from  HoaDon hd
+                join LichSuLamViec ls on   hd.NhanVienLap = ls.MaNhanVien
+                join NhanVien nv on nv.MaNhanVien = hd.NhanVienLap
+                where ls.MaChiNhanh=${MaChiNhanh}
+            `);
+
+            const totalPage = Math.ceil(totalOrder.recordset[0][""] / limit);
+            if(page > totalPage){
+                page = totalPage;
+            }
+            if(page <1){
+                page = 1;
+            }
         const result = await pool.request()
             .query(`
-                select hd.MaHoaDon, hd.MaKhachHang, hd.MaPhieuDat, hd.NgayLap,hd.NhanVienLap,hd.TienGiam, hd.TongTien
-                from  HoaDon hd, LichSuLamViec ls
-                where hd.NhanVienLap = ls.MaNhanVien and ls.MaChiNhanh=${MaChiNhanh}
+                select hd.MaHoaDon, hd.MaKhachHang, hd.MaPhieuDat, hd.NgayLap,hd.NhanVienLap,hd.TienGiam, hd.TongTien,nv.HoTen
+                from  HoaDon hd
+                join LichSuLamViec ls on   hd.NhanVienLap = ls.MaNhanVien
+                join NhanVien nv on nv.MaNhanVien = hd.NhanVienLap
+                where ls.MaChiNhanh=${MaChiNhanh}
                 order by hd.MaHoaDon
                 OFFSET ${offset} ROWS
                 FETCH NEXT ${limit} ROWS ONLY;
             `);
-        res.status(200).json(result.recordset);
+        
+
+            res.status(200).json({
+                orders: result.recordset,
+                min:min,
+                max:max,
+                totalOrders: totalOrder.recordset[0][""],
+                currentPage:page,
+                totalPage:totalPage,
+                branchCode:MaChiNhanh,
+            });
     },
 }
 

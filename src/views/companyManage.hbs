@@ -69,27 +69,37 @@
         </div>
       </form>
 
-
-
       <div class="search-dish mt-5">Search Dish</div>
       <form id="searchForm" class="form-search-dish">
         <label for="TuKhoa">Search Dish:</label>
-        <input class="search-in-name" placeholder="Nhập từ khóa cần tìm kiếm..." type="text" id="TuKhoa" name="TuKhoa" required />
+        <input
+          class="search-in-name"
+          placeholder="Nhập từ khóa cần tìm kiếm..."
+          type="text"
+          id="TuKhoa"
+          name="TuKhoa"
+          required
+        />
         <button class="search-style" type="submit">Search</button>
       </form>
       <div class="container-search">
-      <h5>Search Results:</h5>
-      <ul id="searchResults"></ul>
+        <h5>Search Results:</h5>
+        <ul id="searchResults"></ul>
       </div>
 
       <div class="delete-dish mt-5">Delete Dish</div>
       <form id="deleteForm" class="form-search-dish">
         <label for="MaMonAn">Mã Món Ăn:</label>
-        <input class="search-in-name" placeholder="Nhập mã món ăn cần xóa..."  type="text" id="MaMonAn" name="MaMonAn" required />
+        <input
+          class="search-in-name"
+          placeholder="Nhập mã món ăn cần xóa..."
+          type="text"
+          id="MaMonAn"
+          name="MaMonAn"
+          required
+        />
         <button class="search-style" type="submit">Xóa Món Ăn</button>
       </form>
-
-
 
       <h1>Cập Nhật Món Ăn</h1>
 
@@ -104,17 +114,47 @@
           <div class="up-price"><label for="GiaHienTai">Giá Hiện Tại:</label></div>
         </div>
 
-
         <div class="up-body">
-          <input class="up-in-code" type="text" id="a" name="MaMonAn" required /><br /><br />
-          <input class="up-in-name" type="text" id="b" name="TenMon" required /><br /><br />
-          <input class="up-in-index" type="text" id="c" name="Muc" required /><br /><br />
-          <input class="up-in-des" type="text" id="d" name="MoTa" required /><br /><br />
-          <input class="up-in-img" type="text" id="e" name="HinhAnh" required /><br /><br />
-          <input class="up-in-price" type="number" id="f" name="GiaHienTai" required /><br /><br />
+          <input
+            class="up-in-code"
+            type="text"
+            id="a"
+            name="MaMonAn"
+            required
+          /><br /><br />
+          <input
+            class="up-in-name"
+            type="text"
+            id="b"
+            name="TenMon"
+            required
+          /><br /><br />
+          <input
+            class="up-in-index"
+            type="text"
+            id="c"
+            name="Muc"
+            required
+          /><br /><br />
+          <input class="up-in-des" type="text" id="d" name="MoTa" required /><br
+          /><br />
+          <input
+            class="up-in-img"
+            type="text"
+            id="e"
+            name="HinhAnh"
+            required
+          /><br /><br />
+          <input
+            class="up-in-price"
+            type="number"
+            id="f"
+            name="GiaHienTai"
+            required
+          /><br /><br />
           <button class="up-in-submit" type="submit">Cập Nhật</button>
         </div>
-        
+
       </form>
 
       <!-- Kết quả thông báo -->
@@ -124,14 +164,77 @@
     <div class="col-md-6">
       <div class="card">
         <div class="card-title fw">
-          <a href="company/order?page=1&limit=10">
-            <button class="button-order">
-              <h2>Manager Dish</h2>
-            </button>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
 
+          <button class="button-order">
+            <h2>Manager Order</h2>
+          </button>
+        </div>
+
+        <a href="company/order?page=1&limit=10">
+          <button class="button-order">
+            View all branch
+          </button>
+        </a>
+      </div>
+
+      <form id="view-order">
+        <div class="">
+          View order by branch
+        </div>
+        <div>
+          <label for="branch">Mã chi nhánh</label>
+          <input
+            type="text"
+            id="branch"
+            class="input-branch"
+            placeholder="Nhập mã chi nhánh..."
+          />
+          <button class="submit-branch">submit</button>
+        </div>
+      </form>
+
+      <div class="manage-order-body">
+        <div class="manage-order-header mt-3">
+          <div class="header-col-1">
+            #
+          </div>
+
+          <div class="header-col-2">
+            ORDER ID
+          </div>
+
+          <div class="header-col-3">
+            DATE
+          </div>
+
+          <div class="header-col-5">
+            TOTAL COST
+          </div>
+
+          <div class="header-col-6">
+            CASHIER
+          </div>
+          <div class="header-col-7">
+            VIEW
+          </div>
+        </div>
+
+        <div class="manage-order-content">
+
+           <div id="order-results">
+            <!-- Dữ liệu sẽ được hiển thị ở đây -->
+          </div>
+        </div>
+
+        <div class="manage-order-footer" id="minOfmax" >
+         
+        </div>
+
+      </div>
+
+     
+
+    </div>
+
+  </div>
 </div>

@@ -8,7 +8,14 @@
 
   <div class="row">
     <div class="col-md-3">
-      <div class="card menu">
+
+      <div class="back-button">
+        <a href="/company" class="btn btn-secondary">
+          <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+      </div>
+
+      <div class="card menu mt-4">
         <div class="card-title">
           <i class="fas fa-utensils"></i>
           Menu
@@ -56,40 +63,12 @@
                 
                   <div> <img src="{{HinhAnh}}" alt="{{TenMonAn}}" /></div>
 
-                </div>
-
-                <input  class="check-box-service" type="checkbox" id="check1">
-                
+                </div>                
               </div>
             {{/each}}
       </div>
     </div>
   </div>
-
- 
-    
-{{!-- 
-     <div class="pagination">
-      {{#if (gt currentPage 1)}}
-        <a
-          href="/company/dish/byarea/{{areaID}}?index={{currentIndex}}&page={{dec currentPage}}&limit=3"
-          class="prev-page"
-        >Previous</a>
-      {{/if}}
-
-      {{#each totalPages}}
-        <a href="/company/dish/byarea/{{areaID}}?index={{currentIndex}}&page={{this}}&limit=3" class="{{#if (eq this currentPage)}}active{{/if}}">
-          {{this}}
-        </a>
-      {{/each}}
-
-      {{#if (lt currentPage totalPages)}}
-        <a
-          href="/company/dish/byarea/{{areaID}}?index={{currentIndex}}&page={{inc currentPage}}&limit=3"
-          class="next-page"
-        >Next</a>
-      {{/if}}
-    </div> --}}
 
     <div class="pagination">
       {{#if (gt currentPage 1)}}
@@ -97,7 +76,7 @@
           <a href="?index={{currentIndex}}&page={{sub currentPage 1}}&limit=3" class="page-link">Previous</a>
       {{/if}}
 
-      {{#each (range 1 totalPages)}}
+      {{#each (range_minh 1 totalPages)}}
           {{#if (eq this ../currentPage)}}
               <span class="page-link active">{{this}}</span>
           {{else}}

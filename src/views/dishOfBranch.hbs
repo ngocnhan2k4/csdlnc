@@ -10,7 +10,14 @@
 
   <div class="row">
     <div class="col-md-3">
-      <div class="card menu">
+
+      <div class="back-button">
+        <a href="/company/dish/byarea/{{areaID}}?index=Hotpot&page=1&limit=3" class="btn btn-secondary">
+          <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+      </div>
+
+      <div class="card menu mt-4">
         <div class="card-title">
           <i class="fas fa-utensils"></i>
           Menu
@@ -29,11 +36,16 @@
         {{#each branchs}}
 
           <div class="branch">
-            <a href="/company/dish/bybranch/{{MaChiNhanh}}?areaID={{KhuVuc}}&page=2&limit=3" >{{TenChiNhanh}}</a>
+            <a href="/company/dish/bybranch/{{MaChiNhanh}}?areaID={{KhuVuc}}&page=1&limit=3" >{{TenChiNhanh}}</a>
           </div>
           
         {{/each}}
       </div>
+
+      <form id="search-input" class="form-search mt-5">
+        <input class="input-search" data-chinhanh="{{MaChiNhanh}}" type="text" name="query" placeholder="Tìm kiếm...">
+        <button class="btn-sub" type="submit">Tìm kiếm</button>
+      </form>
       
     </div>
 
@@ -44,37 +56,46 @@
         <div class="serving-status">Serving status</div>
       </div>
 
-        <div class="listDish"> 
-          
-            {{#each dishes}}
-              <div class="flex-dish">
-                <div class="dish">
+        <div class="listDish" id="listDish"> 
+          {{#each dishes}}
+            <div class="flex-dish">
+              <div class="dish">
 
-                  <div>
-                    <h2>{{TenMonAn}}</h2>
-                    <p>{{MoTa}}</p>
-                    <p class ="price">Giá: {{GiaHienTai}}</p>
-                  </div>
-                
-                  <div> <img src="{{HinhAnh}}" alt="{{TenMonAn}}" /></div>
-
+                <div>
+                  <h2>{{TenMonAn}}</h2>
+                  <p>{{MoTa}}</p>
+                  <p class ="price">Giá: {{GiaHienTai}}</p>
                 </div>
-
-                <input  class="check-box-service" type="checkbox" id="check1">
-                
+              
+                <div> <img src="{{HinhAnh}}" alt="{{TenMonAn}}" /></div>
               </div>
-            {{/each}}
-      </div>
+              
+              <input 
+                class="check-box-service" 
+                type="checkbox" 
+                id="check-{{MaMonAn}}" 
+                data-id="{{MaMonAn}}"
+                data-branch="{{MaChiNhanh}}"
+                {{#if (eq TinhTrangPhucVu "Có phục vụ")}}checked{{/if}}
+              >
+            </div>
+          {{/each}}
+        </div>
+
+        <div class="list-by-query" id ="list-by-query">
+
+        </div>
+
     </div>
   </div>
 
  
-    <div class="pagination">
+    <div class="pagination" id="pagi-hbs">
       {{#if (gt currentPage 1)}}
           <a href="?areaID={{areaID}}&page={{sub currentPage 1}}&limit=3" class="page-link">Previous</a>
       {{/if}}
 
-      {{#each (range 1 totalPages)}}
+      {{#each (range_minh 1 totalPages)}}
           {{#if (eq this ../currentPage)}}
               <span class="page-link active">{{this}}</span>
           {{else}}
