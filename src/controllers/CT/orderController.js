@@ -223,6 +223,60 @@ const orderController = {
                 branchCode:MaChiNhanh,
             });
     },
+
+    getAllOrderBranchType: async (req, res) => {
+        const pool = await dbService.connect();
+        const MaChiNhanh = req.params.MaChiNhanh|| 1;
+        const Loai = req.query.Loai || 'T';
+        let page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const offset = (page - 1) * limit;  
+        const min = offset +1;
+        const max = min + limit-1;
+
+        const totalOrder = await pool.request() 
+            .query(`
+                select count(*)
+                from  HoaDon hd
+                join LichSuLamViec ls on   hd.NhanVienLap = ls.MaNhanVien
+                join NhanVien nv on nv.MaNhanVien = hd.NhanVienLap
+                join PhieuDat pd on pd.MaPhieuDat = hd.MaPhieuDat
+                where ls.MaChiNhanh=${MaChiNhanh} and pd.Loai='${Loai}'
+            `);
+
+            const totalPage = Math.ceil(totalOrder.recordset[0][""] / limit);
+
+            if(page > totalPage){
+                page = totalPage;
+            }
+            if(page <1){
+                page = 1;
+            }
+        const result = await pool.request()
+            .query(`
+                select hd.MaHoaDon, hd.MaKhachHang, hd.MaPhieuDat, hd.NgayLap,hd.NhanVienLap,hd.TienGiam, hd.TongTien,nv.HoTen
+                from  HoaDon hd
+                join LichSuLamViec ls on   hd.NhanVienLap = ls.MaNhanVien
+                join NhanVien nv on nv.MaNhanVien = hd.NhanVienLap
+                join PhieuDat pd on pd.MaPhieuDat = hd.MaPhieuDat
+                where ls.MaChiNhanh=${MaChiNhanh} and pd.Loai='${Loai}'
+                order by hd.MaHoaDon
+                OFFSET ${offset} ROWS
+                FETCH NEXT ${limit} ROWS ONLY;
+            `);
+        
+
+            res.status(200).json({
+                orders: result.recordset,
+                min:min,
+                max:max,
+                totalOrders: totalOrder.recordset[0][""],
+                currentPage:page,
+                totalPage:totalPage,
+                branchCode:MaChiNhanh,
+            });
+    },
+    
 }
 
 module.exports = orderController;
