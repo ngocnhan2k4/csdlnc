@@ -158,3 +158,157 @@ try {
 });
 
 
+// Khai báo biến toàn cục để lưu dữ liệu
+let orderData = {};
+
+// Lắng nghe sự kiện submit
+document.getElementById('view-order').addEventListener('submit', function (event) {
+    event.preventDefault(); // Ngăn form gửi yêu cầu mặc định
+
+    // Lấy giá trị mã chi nhánh từ input
+    const branchCode = document.getElementById('branch').value;
+
+    // Tạo URL với query string
+    const url = `/company/order/branch/${encodeURIComponent(branchCode)}?page=1&limit=20`;
+
+    // Gửi yêu cầu GET tới API
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); // Giả sử API trả về JSON
+        })
+        .then(data => {
+            // Lưu dữ liệu vào đối tượng orderData
+            orderData = data;
+
+            // Hiển thị dữ liệu hoặc thực hiện các thao tác
+            renderOrders(orderData.orders); // Hiển thị danh sách orders
+            minOfmax(orderData.min, orderData.max, orderData.totalOrders, orderData.currentPage, orderData.totalPage,data.branchCode);
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+});
+
+
+// Hàm để render dữ liệu lên HTML
+function renderOrders(data) {
+    const resultsContainer = document.getElementById('order-results');
+    resultsContainer.innerHTML = ''; // Xóa nội dung cũ nếu có
+
+    if (Array.isArray(data) && data.length > 0) {
+        data.forEach((order, index) => {
+            const orderElement = document.createElement('div');
+            orderElement.classList.add('order-item');
+
+            // Tạo nội dung HTML cho từng đơn hàng
+            orderElement.innerHTML = `
+                <div class="order">
+                <div class="header-col-1">${index + 1}</div>
+                <div class="header-col-2">${order.MaHoaDon}</div>
+                <div class="header-col-3">${new Date(order.NgayLap).toLocaleDateString()}</div>
+                <div class="header-col-5">${order.TongTien}</div>
+                <div class="header-col-6">${order.HoTen}</div>
+                <div class="header-col-7">
+                    <a href="/company/order/evaluation/${order.MaHoaDon}">
+                    <button class="btn-view">View</button></a></div>
+                </div>
+                <hr />
+            `;
+
+            resultsContainer.appendChild(orderElement); // Chèn nội dung vào container
+        });
+    } else {
+        resultsContainer.innerHTML = '<p>Không có dữ liệu đơn hàng.</p>';
+    }
+}
+
+
+function minOfmax(min, max, total, currentPage, totalPage, branchCode) {
+    const resultsContainer = document.getElementById('minOfmax');
+    resultsContainer.innerHTML = ''; // Xóa nội dung cũ nếu có
+
+    const orderElement = document.createElement('div');
+    orderElement.classList.add('order-current');
+
+    // Tạo nội dung HTML
+    orderElement.innerHTML = `
+        <div class="of">
+            <div>${min} - ${max}</div> 
+            <div> of </div> 
+            <div>${total}</div>
+        </div>
+        
+        <div class="pagination">
+            <a
+                data-url="/company/order/branch/${encodeURIComponent(branchCode)}?page=${currentPage - 1}&limit=20"
+                id="prev-btn"
+                class="prev-btn"
+            >&#60;</a>
+            <span class="pagination-info">
+                ${currentPage} / ${totalPage}
+            </span>
+            <a
+                data-url="/company/order/branch/${encodeURIComponent(branchCode)}?page=${currentPage + 1}&limit=20"
+                id="next-btn"
+                class="next-btn"
+            >&#62;</a>
+        </div>
+    `;
+
+    resultsContainer.appendChild(orderElement); // Chèn nội dung vào container
+
+    // Thêm sự kiện click cho các nút
+    document.getElementById('prev-btn').addEventListener('click', function (event) {
+        event.preventDefault();
+        const url = this.getAttribute('data-url'); // Lấy đường dẫn từ data-url
+        fetchOrders(url); // Gọi hàm fetchOrders để lấy dữ liệu mới
+    });
+
+    document.getElementById('next-btn').addEventListener('click', function (event) {
+        event.preventDefault();
+        const url = this.getAttribute('data-url'); // Lấy đường dẫn từ data-url
+        fetchOrders(url); // Gọi hàm fetchOrders để lấy dữ liệu mới
+    });
+}
+
+function fetchOrders(url) {
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Lưu dữ liệu mới vào orderData
+            orderData = data;
+
+            // Hiển thị lại dữ liệu với trang mới
+            renderOrders(orderData.orders); 
+            minOfmax(
+                orderData.min,
+                orderData.max,
+                orderData.totalOrders,
+                orderData.currentPage,
+                orderData.totalPage,
+                orderData.branchCode
+            );
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+}
+

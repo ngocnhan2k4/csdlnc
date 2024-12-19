@@ -85,15 +85,16 @@
 .header-col-3 {
   width: 40%;
 }
-.header-col-4 {
-  width: 10%;
-}
 .header-col-5 {
   width: 20%;
 }
 .header-col-6 {
   width: 10%;
 }
+.header-col-7 {
+  width: 10%;
+}
+
 
 .manage-order-content {
   padding: 10px;
@@ -131,4 +132,8 @@
 .next-btn:hover {
   background-color: #2492d2;
   color: rgb(255, 255, 255);
+}
+.btn-view{
+  border-radius: 5px;
+  
 }

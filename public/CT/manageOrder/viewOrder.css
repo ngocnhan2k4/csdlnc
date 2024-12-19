@@ -1,0 +1,59 @@
+.review-header {
+  display: flex;
+  width: 100%;
+  background-color: rgb(162, 162, 162);
+  border-top-left-radius:5px ;
+  border-top-right-radius:5px ;
+  border-bottom: 1px solid rgb(0, 0, 0);
+}
+.review-body{
+    display: flex;
+    width: 100%;
+}
+.reveiw{
+    border: 1px, solid rgb(97, 97, 97);
+    width: 60%;
+    border-radius: 5px;
+}
+.review-container{
+    margin-top:200px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:50px;
+}
+
+.code{
+    width:10%;
+}
+
+.bill{
+    width: 10%;
+}
+.service{
+    width: 10%;
+}
+.position{
+    width: 10%;
+}
+.quanlity{
+    width: 10%;
+}
+.money{
+    width: 10%;
+}
+.space{
+    width:20%
+}
+.comment{
+    width: 30%;
+}
+.btn-review{
+    border-radius: 5px;
+}
+.btn-review:hover{
+    background-color: black;
+    scale: 1.4;
+    color:white;
+}
