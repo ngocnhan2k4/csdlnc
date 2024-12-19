@@ -1,0 +1,268 @@
+.header {
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.header-container {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 4rem;
+    margin-left: 20px;
+}
+
+.logo-link {
+    flex-shrink: 0;
+}
+
+.logo {
+    position: relative;
+    width: 3rem;
+    height: 3rem;
+}
+
+.logo-inner {
+    position: absolute;
+    inset: 0;
+    background-color: #FF3B30;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-icon {
+    width: 120%;
+    height: 120%;
+    object-fit: contain;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-link {
+    color: #111827;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.nav-link:hover {
+    color: #4B5563;
+}
+
+.nav-link-highlight {
+    background-color: #FF8A00;
+    color: white;
+    border-radius: 0.375rem;
+}
+
+.nav-link.active {
+  background-color: #FF8A00;
+    color: white;
+    border-radius: 0.375rem;
+}
+
+.auth-button-container {
+    display: flex;
+}
+
+.auth-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.375rem;
+    color: white;
+    background-color: #0F172A;
+    text-decoration: none;
+}
+
+.auth-button:hover {
+    background-color: rgba(15, 23, 42, 0.9);
+}
+
+.auth-icon {
+    margin-right: 0.5rem;
+    height: 1rem;
+    width: 1rem;
+}
+
+@media (max-width: 640px) {
+    .header-content {
+        flex-direction: column;
+        height: auto;
+        padding: 1rem 0;
+    }
+
+    .nav {
+        margin: 1rem 0;
+    }
+
+    .auth-button-container {
+        margin-top: 1rem;
+    }
+}
+
+/* Footer Container */
+.footer {
+    background-color: #f2f2f2;
+    color: #333;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+  }
+  
+  .footer-container {
+    flex-direction: column;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    /* margin: 0 auto;
+    padding: 20px; */
+  }
+  
+  .app-links {
+    flex-direction: row;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Chia thành 4 cột bằng nhau */
+    gap: 10px;
+  }
+
+
+  .footer-section {
+    flex: 1 1 25%;
+    margin: 10px;
+
+    /* display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px; */
+  }
+  
+  .footer-section h3,
+  .footer-section h4 {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 17px;
+  }
+  
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-section ul li {
+    margin-bottom: 5px;
+  }
+  
+  .footer-section ul li a {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .footer-section ul li a:hover {
+    text-decoration: underline;
+  }
+  
+  /* App Store and Logo */
+  .app-links img {
+    width: 150px;
+    margin-right: 10px;
+  }
+  
+  .footer-logo {
+    width: 80px;
+    margin: auto 0;
+    align-self: center;
+    justify-self: center;
+  }
+  
+  /* Newsletter Section */
+  .newsletter-input {
+    display: flex;
+    margin: 10px 0;
+  }
+  
+  .newsletter-input input {
+    padding: 8px;
+    flex: 1;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+  }
+  
+  .newsletter-input button {
+    background-color: #ff8c00;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+  }
+  
+  .newsletter-input button:hover {
+    background-color: #e07b00;
+  }
+  
+  .social-icons {
+    margin-top: 10px;
+  }
+  
+  .social-icons a {
+    color: #333;
+    font-size: 20px;
+    margin-right: 10px;
+  }
+  
+  .social-icons a:hover {
+    color: #ff8c00;
+  }
+  
+  /* Footer Bottom */
+  .footer-bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #111;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+  }
+  
+  .footer-bottom ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 20px 0 0;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .footer-bottom ul li {
+    margin: 0 10px;
+  }
+  
+  .footer-bottom ul li a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .footer-bottom ul li a:hover {
+    text-decoration: underline;
+  }
+
+  .footer-bottom p{
+    margin: 10px 0 0 20px;
+  }
+  

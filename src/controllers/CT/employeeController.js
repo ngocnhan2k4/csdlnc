@@ -68,11 +68,21 @@ const employeeController = {
         const offset = (page - 1) * limit;
     
         try {
+            // SELECT nv.MaNhanVien, nv.HoTen, bp.TenBoPhan, nv.NgayVaoLam, nv.NgayNghiViec
+            //     FROM NhanVien nv
+            //     LEFT JOIN LichSuLamViec ls ON nv.MaNhanVien = ls.MaNhanVien
+            //     LEFT JOIN BoPhanHeThong bp ON ls.BoPhanLamViec = bp.MaBoPhan
+            //     LEFT JOIN ChiNhanh cn ON ls.MaChiNhanh = cn.MaChiNhanh
+            //     WHERE 1=1
             // Truy vấn lấy dữ liệu nhân viên với điều kiện lọc theo chi nhánh và tìm kiếm
             let query = `
                 SELECT nv.MaNhanVien, nv.HoTen, bp.TenBoPhan, nv.NgayVaoLam, nv.NgayNghiViec
                 FROM NhanVien nv
-                LEFT JOIN LichSuLamViec ls ON nv.MaNhanVien = ls.MaNhanVien
+                LEFT JOIN (
+                    SELECT ls.MaNhanVien, ls.BoPhanLamViec, ls.MaChiNhanh, MAX(ls.NgayBatDau) AS NgayMoiNhat
+                    FROM LichSuLamViec ls
+                    GROUP BY ls.MaNhanVien, ls.BoPhanLamViec, ls.MaChiNhanh
+                ) AS ls ON nv.MaNhanVien = ls.MaNhanVien
                 LEFT JOIN BoPhanHeThong bp ON ls.BoPhanLamViec = bp.MaBoPhan
                 LEFT JOIN ChiNhanh cn ON ls.MaChiNhanh = cn.MaChiNhanh
                 WHERE 1=1
@@ -170,7 +180,11 @@ const employeeController = {
             let query = `
                 SELECT nv.MaNhanVien, nv.HoTen, bp.TenBoPhan, nv.NgayVaoLam, nv.NgayNghiViec
                 FROM NhanVien nv
-                LEFT JOIN LichSuLamViec ls ON nv.MaNhanVien = ls.MaNhanVien
+                LEFT JOIN (
+                    SELECT ls.MaNhanVien, ls.BoPhanLamViec, ls.MaChiNhanh, MAX(ls.NgayBatDau) AS NgayMoiNhat
+                    FROM LichSuLamViec ls
+                    GROUP BY ls.MaNhanVien, ls.BoPhanLamViec, ls.MaChiNhanh
+                ) AS ls ON nv.MaNhanVien = ls.MaNhanVien
                 LEFT JOIN BoPhanHeThong bp ON ls.BoPhanLamViec = bp.MaBoPhan
                 LEFT JOIN ChiNhanh cn ON ls.MaChiNhanh = cn.MaChiNhanh
                 WHERE 1=1
@@ -331,6 +345,7 @@ const employeeController = {
                 Quan,
                 ThanhPho,
                 NgayVaoLam,
+                NgayNghiViec,
                 MaChiNhanh,
                 BoPhanLamViec,
             } = req.body;
@@ -358,6 +373,7 @@ const employeeController = {
     
             NgaySinh = formatDate(NgaySinh);
             NgayVaoLam = formatDate(NgayVaoLam);
+            NgayNghiViec = formatDate(NgayNghiViec);
     
             // Thực thi truy vấn
             const result = await pool.request()
@@ -390,23 +406,67 @@ const employeeController = {
         }
     },          
 
-    deleteEmployee : async (req,res) =>{
-        //chỉ xóa dc khi có 1 dòng dl trong bảng LichSuLamViec
-        const pool = await dbService.connect();
-        const {MaNhanVien} = req.body;
-        const result = await pool.request()
-            .query(`
-                DELETE FROM LichSuLamViec WHERE MaNhanVien = ${MaNhanVien};
-                DELETE FROM NhanVien WHERE MaNhanVien = ${MaNhanVien};
-            `);
-        res.status(200).json(result.recordset);
-    },
+    deleteEmployee: async (req, res) => {
+        try {
+    
+            // Chỉ xóa khi có đủ điều kiện
+            const pool = await dbService.connect();
+            const { MaNhanVien } = req.body;
+
+            console.log(MaNhanVien)
+    
+            if (!MaNhanVien) {
+                return res.status(400).json({ error: "MaNhanVien is required" });
+            }
+    
+            const result = await pool.request()
+                .input('MaNhanVien', MaNhanVien) // Tham số hóa
+                .query(`
+                    DELETE FROM LichSuLamViec WHERE MaNhanVien = @MaNhanVien;
+                    DELETE FROM NhanVien WHERE MaNhanVien = @MaNhanVien;
+                `);
+    
+            console.log("Database result:", result);
+    
+            // Trả phản hồi JSON
+            return res.status(200).json({
+                message: "Employee deleted successfully",
+                data: result.recordset,
+            });
+        } catch (error) {
+            console.error("Error deleting employee:", error.message);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+    },    
 
     updateEmployee : async (req,res) =>{
         const pool = await dbService.connect();
-        const {MaNhanVien,HoTen,NgaySinh,GioiTinh,SoDienThoai,SoNha,Duong,Quan,ThanhPho,NgayVaoLam,NgayNghiViec} = req.body;
+        let {MaNhanVien,HoTen,NgaySinh,GioiTinh,SoDienThoai,SoNha,Duong,Quan,ThanhPho,NgayVaoLam,NgayNghiViec} = req.body;
+        let result;
+
+        MaNhanVien = parseInt(MaNhanVien, 10);
+
+        if (GioiTinh.toLowerCase() === "male"){
+            GioiTinh = "Nam";
+        } else {
+            GioiTinh = "Nữ";
+        }
+
+        // Chuyển đổi định dạng ngày tháng sang 'YYYY-MM-DD'
+        const formatDate = (dateStr) => {
+            const date = new Date(dateStr);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        };
+
+        NgaySinh = formatDate(NgaySinh);
+        NgayVaoLam = formatDate(NgayVaoLam);
+        NgayNghiViec = formatDate(NgayNghiViec);
+
         if(!NgayNghiViec){
-        const result = await pool.request()
+            result = await pool.request()
             .query(`
                 EXEC sp_UpdateEmployee
                 @MaNhanVien = ${MaNhanVien}, 
@@ -421,32 +481,57 @@ const employeeController = {
                 @NgayVaoLam = '${NgayVaoLam}',
                 @NgayNghiViec = NULL
             `);
-        res.status(200).json(result.recordset);
-            }
-            else{
-                const result = await pool.request()
-                .query(`
-                    EXEC sp_UpdateEmployee
-                    @MaNhanVien = ${MaNhanVien}, 
-                    @HoTen = N'${HoTen}',
-                    @NgaySinh = '${NgaySinh}',
-                    @GioiTinh = N'${GioiTinh}',
-                    @SoDienThoai = '${SoDienThoai}',
-                    @SoNha = N'${SoNha}',
-                    @Duong = N'${Duong}',
-                    @Quan = N'${Quan}',
-                    @ThanhPho = N'${ThanhPho}',
-                    @NgayVaoLam = '${NgayVaoLam}',
-                    @NgayNghiViec = '${NgayNghiViec}'
-                `);
-            res.status(200).json(result.recordset);
-            }
+        } else{
+            result = await pool.request()
+            .query(`
+                EXEC sp_UpdateEmployee
+                @MaNhanVien = ${MaNhanVien}, 
+                @HoTen = N'${HoTen}',
+                @NgaySinh = '${NgaySinh}',
+                @GioiTinh = N'${GioiTinh}',
+                @SoDienThoai = '${SoDienThoai}',
+                @SoNha = N'${SoNha}',
+                @Duong = N'${Duong}',
+                @Quan = N'${Quan}',
+                @ThanhPho = N'${ThanhPho}',
+                @NgayVaoLam = '${NgayVaoLam}',
+                @NgayNghiViec = '${NgayNghiViec}'
+            `);
+        }
+
+        console.log("Database result:", result);
+
+        // Gửi phản hồi JSON
+        return res.status(200).json({
+            message: "Employee added successfully",
+            data: result.recordset,
+        });
     },
+
     reassignEmployee: async (req,res) =>{
+        console.log("reassign employee", req.body)
+        let result;
+
         const pool = await dbService.connect();
-        const {MaNhanVien,MaChiNhanh,BoPhanLamViec,NgayBatDau,NgayKetThuc} = req.body;
+        let {MaNhanVien,MaChiNhanh,BoPhanLamViec,NgayBatDau,NgayKetThuc} = req.body;
+
+        MaNhanVien = parseInt(MaNhanVien, 10);
+        MaChiNhanh = parseInt(MaChiNhanh, 10);
+        BoPhanLamViec = parseInt(BoPhanLamViec, 10);
+
+        const formatDate = (dateStr) => {
+            const date = new Date(dateStr);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        };
+
+        NgayBatDau = formatDate(NgayBatDau);
+        NgayKetThuc = formatDate(NgayKetThuc);
+
         if(!NgayKetThuc){
-        const result = await pool.request()
+            result = await pool.request()
             .query(`
                 EXEC sp_ReassignEmployee
                 @MaNhanVien = ${MaNhanVien},
@@ -455,10 +540,9 @@ const employeeController = {
                 @NgayBatDau = '${NgayBatDau}',
                 @NgayKetThuc = NULL
             `);
-        res.status(200).json(result.recordset);
         }
         else{
-            const result = await pool.request()
+            result = await pool.request()
             .query(`
                 EXEC sp_ReassignEmployee
                 @MaNhanVien = ${MaNhanVien},
@@ -467,10 +551,15 @@ const employeeController = {
                 @NgayBatDau = '${NgayBatDau}',
                 @NgayKetThuc = '${NgayKetThuc}'
             `);
-        res.status(200).json(result.recordset);
         }
+        console.log("Database result:", result);
+
+        // Gửi phản hồi JSON
+        return res.status(200).json({
+            message: "Employee reassign successfully",
+            data: result.recordset,
+        });
     }
-   
 }
 
 module.exports = employeeController;

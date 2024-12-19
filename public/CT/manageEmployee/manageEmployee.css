@@ -75,6 +75,17 @@
     background-color: #2563eb;
 }
 
+.reassign-employee-btn {
+    background-color: #3b82f6;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+}
+
+.reassign-employee-btn:hover {
+    background-color: #2563eb;
+}
+
 .search-btn {
     background-color: #3b82f6;
     color: #fff;

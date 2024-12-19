@@ -48,7 +48,7 @@ const authController = {
 
 
         res.render("signup", {
-            layout: "main",
+            layout: "auth",
             title: "Sign up",
             customHead: `
             <link rel="stylesheet" href="/Auth/signup.css">
@@ -66,7 +66,7 @@ const authController = {
         // `);
 
         res.render("signin", {
-            layout: "main",
+            layout: "auth",
             title: "Sign in",
             customHead: `
             <link rel="stylesheet" href="/Auth/signin.css">
