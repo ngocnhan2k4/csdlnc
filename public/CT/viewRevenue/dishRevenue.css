@@ -1,0 +1,78 @@
+.dishRevenue-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.view-dish {
+    margin-top: 50px;
+    background-color: #ffffff;
+    width: 60%;
+    height: 100%;
+    border-radius: 5px;
+    border: 2px solid rgb(195, 195, 195);
+}
+
+.view-dish-header {
+    display: flex;
+    background-color: #eaeff2;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    width: 100%;
+    height: 70px;
+    align-items: center;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.view-dish-revenue-footer {
+    background-color: #eaeff2;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+}
+
+.view-dish-content {
+    padding: 10px;
+}
+
+
+.header-col-1 {
+    width: 10%;
+}
+
+.header-col-2 {
+    width: 50%;
+}
+
+.header-col-3 {
+    width: 10%;
+}
+
+.header-col-4 {
+    width: 40%;
+}
+
+.dish
+{
+    display: flex;
+    height: 30px;
+}
+
+.active {
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    border-radius: 5px;
+    width: 25%;
+    height: 40px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgb(114, 114, 114);
+    text-decoration: none;
+}

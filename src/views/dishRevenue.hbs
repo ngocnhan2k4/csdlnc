@@ -1,0 +1,47 @@
+<div id="app" class = "dishRevenue-container">
+   
+    <div class ="view-dish">
+        <div class="view-dish-header">
+            <div class="header-col-1">
+                Dish ID
+            </div>
+
+            <div class="header-col-2">
+                Dish Name
+            </div>
+
+            <div class="header-col-3">
+                Quantity
+            </div>
+            
+            <div class="header-col-4">
+                Total Revenue
+            </div>
+        </div>
+
+        <div class="view-dish-content">
+            {{#each data}}
+            <div class="dish">
+                <div class="header-col-1">{{MaMonAn}}</div>
+                <div class="header-col-2">{{TenMonAn}}</div>
+                <div class="header-col-3">{{SoLuong}}</div>
+                <div class="header-col-4">{{DoanhThu}}</div>
+            </div>
+            <hr />
+            {{/each}}
+        </div>
+
+        <div class="view-dish-revenue-footer">
+            <div class="dish-current">
+                {{min}}-{{max}}
+                of
+                {{totalDishes}}
+            </div>
+            <div class="pagination">
+                <a href="{{type}}?sortType={{sortType}}&page={{previous}}&Date={{Date}}&month={{month}}&year={{year}}" class="prev-btn">&#60;</a>
+                <span class="pagination-info">{{currentPage}} / {{totalPages}} </span>
+                <a href="{{type}}?sortType={{sortType}}&page={{nextPage}}&Date={{Date}}&month={{month}}&year={{year}}" class="next-btn">&#62;</a>
+            </div>
+        </div>
+    </div>
+</div>  

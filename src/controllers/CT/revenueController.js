@@ -5,6 +5,7 @@ const revenueController = {
    
     renderRevenueByType: async (req, res) => {
         const { type } = req.params;
+        const MaChiNhanh = parseInt(req.query.branch) || 0;
         const pool = await dbService.connect();
         let query = '';
         let revenueData = [];
@@ -16,7 +17,9 @@ const revenueController = {
                     SELECT 
                     CONVERT(DATE, hd.NgayLap) AS Ngay, 
                     SUM(hd.TongTien - hd.TienGiam) AS DoanhThu 
-                    FROM HoaDon hd
+                    FROM HoaDon hd, LichSuLamViec ls
+                    WHERE (${MaChiNhanh} = 0)
+                    OR (hd.NhanVienLap = ls.MaNhanVien and ls.MaChiNhanh=${MaChiNhanh})
                     GROUP BY CONVERT(DATE, hd.NgayLap)
                     ORDER BY Ngay;
                 `;
@@ -26,7 +29,9 @@ const revenueController = {
                     YEAR(hd.NgayLap) AS Nam, 
                     MONTH(hd.NgayLap) AS Thang, 
                     SUM(hd.TongTien - hd.TienGiam) AS DoanhThu 
-                    FROM HoaDon hd
+                    FROM HoaDon hd, LichSuLamViec ls
+                    WHERE (${MaChiNhanh} = 0)
+                    OR (hd.NhanVienLap = ls.MaNhanVien and ls.MaChiNhanh=${MaChiNhanh})
                     GROUP BY YEAR(hd.NgayLap), MONTH(hd.NgayLap)
                     ORDER BY Nam, Thang;
                 `;
@@ -35,7 +40,9 @@ const revenueController = {
                    SELECT 
                 YEAR(hd.NgayLap) AS Nam, 
                 SUM(hd.TongTien - hd.TienGiam) AS DoanhThu 
-                FROM HoaDon hd
+                FROM HoaDon hd, LichSuLamViec ls
+                WHERE (${MaChiNhanh} = 0)
+                OR (hd.NhanVienLap = ls.MaNhanVien and ls.MaChiNhanh=${MaChiNhanh})
                 GROUP BY YEAR(hd.NgayLap)
                 ORDER BY Nam;
                 `;
@@ -81,72 +88,190 @@ const revenueController = {
         }
     },
 
-    getDishRevenue : async (req, res) => {
-        const {sortType = "ASC", Date = "2024-01-07", month = 1, year = 2024, type = "year", page = 1, pageSize = 10} = req.query;
-        const offset = (page - 1) * pageSize;
+    getDishRevenue: async (req, res) => {
+        const { sortType = "ASC", Date = "2024-01-07", month = 1, year = 2024} = req.query;
+        const MaChiNhanh = parseInt(req.query.branch) || 0;
+        console.log(MaChiNhanh);
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = parseInt(req.query.pageSize) || 10;
+        const type = req.params.type;
+        const limit = 10;
+        const offset = (page - 1) * limit;
         const pool = await dbService.connect();
         let query = '';
-        if(type==='day'){
+        let countQuery = '';
+        
+        if (type === 'day') {
             query = `
-            SELECT 
-            m.TenMonAn,
-            c.MaMonAn,
-            SUM(m.GiaHienTai*c.SoLuong) AS DoanhThu,
-            SUM(c.SoLuong) AS SoLuong
+        SELECT 
+        m.TenMonAn,
+        c.MaMonAn,
+        SUM(m.GiaHienTai*c.SoLuong) AS DoanhThu,
+        SUM(c.SoLuong) AS SoLuong
+        FROM ChiTietPhieuDat c
+        JOIN MonAn m ON c.MaMonAn = m.MaMonAn
+        JOIN PhieuDat p ON c.MaPhieuDat = p.MaPhieuDat JOIN LichSuLamViec ls on ls.MaNhanVien=p.NhanVienLap
+        WHERE
+        (${MaChiNhanh} = 0 AND CONVERT(DATE, p.NgayLap) = '${Date}')
+        OR
+        (CONVERT(DATE, p.NgayLap) = '${Date}' AND ls.MaChiNhanh = ${MaChiNhanh})
+        GROUP BY c.MaMonAn, m.TenMonAn
+        ORDER BY DoanhThu ${sortType}
+        OFFSET ${offset} ROWS FETCH NEXT ${pageSize} ROWS ONLY;
+    `;
+            countQuery = `
+        SELECT 
+        COUNT(*) AS TotalCount
+        FROM (
+            SELECT c.MaMonAn
             FROM ChiTietPhieuDat c
             JOIN MonAn m ON c.MaMonAn = m.MaMonAn
-            JOIN PhieuDat p ON c.MaPhieuDat = p.MaPhieuDat 
-            WHERE CONVERT(DATE, p.NgayLap) = '${Date}' 
+            JOIN PhieuDat p ON c.MaPhieuDat = p.MaPhieuDat  JOIN LichSuLamViec ls on ls.MaNhanVien=p.NhanVienLap
+            WHERE
+            (${MaChiNhanh} = 0 AND CONVERT(DATE, p.NgayLap) = '${Date}')
+            OR
+            (CONVERT(DATE, p.NgayLap) = '${Date}' AND ls.MaChiNhanh = ${MaChiNhanh})
             GROUP BY c.MaMonAn, m.TenMonAn
-            ORDER BY DoanhThu ${sortType}
-            OFFSET ${offset} ROWS FETCH NEXT ${pageSize} ROWS ONLY;
-            `;
-        }
-        else if(type ==='month')
-        {
+        ) AS CountTable;
+    `;
+        } else if (type === 'month') {
             query = `
-            SELECT 
-            m.TenMonAn,
-            c.MaMonAn,
-            SUM(m.GiaHienTai*c.SoLuong) AS DoanhThu,
-            SUM(c.SoLuong) AS SoLuong
+        SELECT 
+        m.TenMonAn,
+        c.MaMonAn,
+        SUM(m.GiaHienTai*c.SoLuong) AS DoanhThu,
+        SUM(c.SoLuong) AS SoLuong
+        FROM ChiTietPhieuDat c
+        JOIN MonAn m ON c.MaMonAn = m.MaMonAn
+        JOIN PhieuDat p ON c.MaPhieuDat = p.MaPhieuDat  JOIN LichSuLamViec ls on ls.MaNhanVien=p.NhanVienLap
+        WHERE
+        (${MaChiNhanh} = 0 AND YEAR(p.NgayLap) = ${year} AND MONTH(p.NgayLap) = ${month})
+        OR
+        (YEAR(p.NgayLap) = ${year} AND MONTH(p.NgayLap) = ${month} AND ls.MaChiNhanh = ${MaChiNhanh})
+        GROUP BY c.MaMonAn, m.TenMonAn
+        ORDER BY DoanhThu ${sortType}
+        OFFSET ${offset} ROWS FETCH NEXT ${pageSize} ROWS ONLY;
+    `;
+            countQuery = `
+        SELECT 
+        COUNT(*) AS TotalCount
+        FROM (
+            SELECT c.MaMonAn
             FROM ChiTietPhieuDat c
             JOIN MonAn m ON c.MaMonAn = m.MaMonAn
-            JOIN PhieuDat p ON c.MaPhieuDat = p.MaPhieuDat 
-            WHERE YEAR(p.NgayLap) = ${year} AND MONTH(p.NgayLap) = ${month}
+            JOIN PhieuDat p ON c.MaPhieuDat = p.MaPhieuDat  JOIN LichSuLamViec ls on ls.MaNhanVien=p.NhanVienLap
+            WHERE
+            (${MaChiNhanh} = 0 AND YEAR(p.NgayLap) = ${year} AND MONTH(p.NgayLap) = ${month})
+            OR
+            (YEAR(p.NgayLap) = ${year} AND MONTH(p.NgayLap) = ${month} AND ls.MaChiNhanh = ${MaChiNhanh})
             GROUP BY c.MaMonAn, m.TenMonAn
-            ORDER BY DoanhThu ${sortType}
-            OFFSET ${offset} ROWS FETCH NEXT ${pageSize} ROWS ONLY;
-            `;
-        }
-        else if(type ==='year'){
+        ) AS CountTable;
+    `;
+        } else if (type === 'year') {
             query = `
-            SELECT 
-            m.TenMonAn,
-            c.MaMonAn,
-            SUM(m.GiaHienTai*c.SoLuong) AS DoanhThu,
-            SUM(c.SoLuong) AS SoLuong
+        SELECT 
+        m.TenMonAn,
+        c.MaMonAn,
+        SUM(m.GiaHienTai*c.SoLuong) AS DoanhThu,
+        SUM(c.SoLuong) AS SoLuong
+        FROM ChiTietPhieuDat c
+        JOIN MonAn m ON c.MaMonAn = m.MaMonAn
+        JOIN PhieuDat p ON c.MaPhieuDat = p.MaPhieuDat  JOIN LichSuLamViec ls on ls.MaNhanVien=p.NhanVienLap
+        WHERE
+        (${MaChiNhanh} = 0 AND YEAR(p.NgayLap) = ${year})
+        OR
+        (YEAR(p.NgayLap) = ${year} AND ls.MaChiNhanh = ${MaChiNhanh})
+        GROUP BY c.MaMonAn, m.TenMonAn
+        ORDER BY DoanhThu ${sortType}
+        OFFSET ${offset} ROWS FETCH NEXT ${pageSize} ROWS ONLY;
+    `;
+            countQuery = `
+        SELECT 
+        COUNT(*) AS TotalCount
+        FROM (
+            SELECT c.MaMonAn
             FROM ChiTietPhieuDat c
             JOIN MonAn m ON c.MaMonAn = m.MaMonAn
-            JOIN PhieuDat p ON c.MaPhieuDat = p.MaPhieuDat
-            WHERE YEAR(p.NgayLap) = ${year}
+            JOIN PhieuDat p ON c.MaPhieuDat = p.MaPhieuDat  JOIN LichSuLamViec ls on ls.MaNhanVien=p.NhanVienLap
+            WHERE
+            (${MaChiNhanh} = 0 AND YEAR(p.NgayLap) = ${year})
+            OR
+            (YEAR(p.NgayLap) = ${year} AND ls.MaChiNhanh = ${MaChiNhanh})
             GROUP BY c.MaMonAn, m.TenMonAn
-            ORDER BY DoanhThu ${sortType}
-            OFFSET ${offset} ROWS FETCH NEXT ${pageSize} ROWS ONLY;
-            `;
+        ) AS CountTable;
+    `;  }else {
+            return res.status(400).send('Invalid type parameter');
         }
+
+        try {
+            // Execute the SQL query
+            const result = await pool.request().query(query);
+            const dishesData = result.recordset;
+
+            // Render or respond with JSON
+            const acceptsJSON = req.headers['accept']?.includes('application/json');
+            if (acceptsJSON) {
+                return res.status(200).json(dishesData);
+            }
+
+            const countResult = await pool.request().query(countQuery);
+            const totalDishes = countResult.recordset[0].TotalCount;
+            const totalPages = Math.ceil(totalDishes / limit);
+            const min = limit * (page - 1) + 1;
+            const max = limit * page;
+            let previous = page;
+            let nextPage = page;
+
+            if (page > 1) {
+                previous = page - 1;
+            }
+            if (page < totalPages) {
+                nextPage = page + 1;
+            }
+            
+            // Render the Handlebars view
+            res.render('dishRevenue', {
+                type,
+                Date: Date,
+                month: month,
+                year: year,
+                data: dishesData,
+                sortType: sortType,
+                currentPage: page,
+                totalPages: totalPages,
+                totalDishes: totalDishes,
+                min: min,
+                max: max,
+                nextPage: nextPage,
+                previous: previous,
+                filters: { sortType, Date, month, year },
+                customHead: `
+                    <link rel="stylesheet" href="/CT/viewRevenue/DishRevenue.css">`               
+            });
+        } catch (err) {
+            console.error('Error fetching dish revenue:', err);
+            res.status(500).send('Internal Server Error');
+        }
+    },
+
+
+    renderDishRevenue : async (req, res) => {
+        query = `SELECT ChiNhanh.MaChiNhanh, ChiNhanh.TenChiNhanh 
+                FROM ChiNhanh`;
+        
+        const pool = await dbService.connect();
         const result = await pool.request().query(query);
-        dishesData = result.recordset;
+        const branches = result.recordset;
         res.render("viewDishRevenue", {
             layout: "main",
             title: "RevenueDish",
-            dishes: dishesData,
             customHead: `
-                <link rel="stylesheet" href="/CT/viewRevenue/viewRevenueDish.css">
-                <script defer src="/CT/viewRevenue/viewRevenueDish.js"></script>`,
+                <link rel="stylesheet" href="/CT/viewRevenue/viewDishRevenue.css">
+                <script defer src="/CT/viewRevenue/viewDishRevenue.js"></script>`,
+            branches: branches,
         });
-        
     },
+
 
     
     getAverageEvalu : async (req, res) => {
@@ -231,12 +356,20 @@ const revenueController = {
     },
     
     renderRevenue : async (req, res) => {
+        query = `SELECT ChiNhanh.MaChiNhanh, ChiNhanh.TenChiNhanh 
+                FROM ChiNhanh`;
+
+        const pool = await dbService.connect();
+        const result = await pool.request().query(query);
+        const branches = result.recordset;
+
         res.render("viewRevenue", {
             layout: "main",
             title: "Revenue",
             customHead: `
               <link rel="stylesheet" href="/CT/viewRevenue/viewRevenue.css">
               <script defer src="/CT/viewRevenue/viewRevenue.js"></script>`,
+            branches: branches,
     })
     }
 }
