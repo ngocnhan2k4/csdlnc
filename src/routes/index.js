@@ -18,6 +18,8 @@ const authRouter = require("./Auth/authRoute.js");
 
 const homeRouter = require("./homeRouter.js");
 
+const midd = require("../middleware/role.js"); // import middleware phân quyền người dùng
+
 function route(app) {
     //Auth
     app.use("/auth", authRouter);
@@ -48,11 +50,12 @@ function route(app) {
 
     //CT
     app.use("/company/revenue", revenueCompanyRouter);
-    app.use("/company/order", orderCompanyRouter);
-    app.use("/company/dish", dishCompanyRouter);
+    app.use("/company/order",midd.checkRole('admin'), orderCompanyRouter);
+    app.use("/company/dish",midd.checkRole('admin'), dishCompanyRouter); // chỉ admin với được vào đường dẫn này
     app.use("/company/employee", employeeCompanyRouter);
-    
-    app.use("/company", manageFoodRouter);
+
+    app.use("/company",  manageFoodRouter);
 }
+
 
 module.exports = route;
