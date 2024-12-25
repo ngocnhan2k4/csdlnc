@@ -49,7 +49,7 @@ function route(app) {
     app.use("/branch/revenue", revenueRouter);
 
     //CT
-    app.use("/company/revenue", revenueCompanyRouter);
+    app.use("/company/revenue", midd.checkRole('admin') ,revenueCompanyRouter);
     app.use("/company/order",midd.checkRole('admin'), orderCompanyRouter);
     app.use("/company/dish",midd.checkRole('admin'), dishCompanyRouter); // chỉ admin với được vào đường dẫn này
     app.use("/company/employee", employeeCompanyRouter);

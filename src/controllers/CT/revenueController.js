@@ -6,8 +6,13 @@ const revenueController = {
     renderRevenueByType: async (req, res) => {
         const { type } = req.params;
         const MaChiNhanh = parseInt(req.query.branch) || 0;
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = parseInt(req.query.pageSize) || 10;
+        const limit = 10;
+        const offset = (page - 1) * limit;
         const pool = await dbService.connect();
         let query = '';
+        let countQuery = '';
         let revenueData = [];
 
         try {
@@ -21,7 +26,15 @@ const revenueController = {
                     WHERE (${MaChiNhanh} = 0)
                     OR (hd.NhanVienLap = ls.MaNhanVien and ls.MaChiNhanh=${MaChiNhanh})
                     GROUP BY CONVERT(DATE, hd.NgayLap)
-                    ORDER BY Ngay;
+                    ORDER BY Ngay
+                    OFFSET ${offset} ROWS FETCH NEXT ${pageSize} ROWS ONLY;
+                `;
+                countQuery = `
+                    SELECT
+                    COUNT(DISTINCT CONVERT(DATE, hd.NgayLap)) AS TotalCount
+                    FROM HoaDon hd, LichSuLamViec ls
+                    WHERE (${MaChiNhanh} = 0)
+                    OR (hd.NhanVienLap = ls.MaNhanVien and ls.MaChiNhanh=${MaChiNhanh});
                 `;
             } else if (type === 'month') {
                 query = `
@@ -33,7 +46,15 @@ const revenueController = {
                     WHERE (${MaChiNhanh} = 0)
                     OR (hd.NhanVienLap = ls.MaNhanVien and ls.MaChiNhanh=${MaChiNhanh})
                     GROUP BY YEAR(hd.NgayLap), MONTH(hd.NgayLap)
-                    ORDER BY Nam, Thang;
+                    ORDER BY Nam, Thang
+                    OFFSET ${offset} ROWS FETCH NEXT ${pageSize} ROWS ONLY;
+                `;
+                countQuery = `
+                    SELECT
+                    COUNT(DISTINCT YEAR(hd.NgayLap), MONTH(hd.NgayLap)) AS TotalCount
+                    FROM HoaDon hd, LichSuLamViec ls
+                    WHERE (${MaChiNhanh} = 0)
+                    OR (hd.NhanVienLap = ls.MaNhanVien and ls.MaChiNhanh=${MaChiNhanh});
                 `;
             } else if (type === 'year') {
                 query = `
@@ -44,7 +65,15 @@ const revenueController = {
                 WHERE (${MaChiNhanh} = 0)
                 OR (hd.NhanVienLap = ls.MaNhanVien and ls.MaChiNhanh=${MaChiNhanh})
                 GROUP BY YEAR(hd.NgayLap)
-                ORDER BY Nam;
+                ORDER BY Nam
+                OFFSET ${offset} ROWS FETCH NEXT ${pageSize} ROWS ONLY;
+                `;
+                countQuery = `
+                    SELECT
+                    COUNT(DISTINCT YEAR(hd.NgayLap)) AS TotalCount
+                    FROM HoaDon hd, LichSuLamViec ls
+                    WHERE (${MaChiNhanh} = 0)
+                    OR (hd.NhanVienLap = ls.MaNhanVien and ls.MaChiNhanh=${MaChiNhanh});
                 `;
             } else {
                 return res.status(400).render("viewRevenueCompany", {
@@ -60,13 +89,38 @@ const revenueController = {
             }
 
             // Thực thi truy vấn
+            console.log(query);
             const result = await pool.request().query(query);
             revenueData = result.recordset;
+            // Tính toán thông tin phân trang
+            const countResult = await pool.request().query(countQuery);
+            const totalRecords = countResult.recordset[0].TotalCount;
+            const totalPages = Math.ceil(totalRecords / limit);
+            const min = limit * (page - 1) + 1;
+            const max = limit * page;
+            let previous = page;
+            let nextPage = page;
+
+            if (page > 1) {
+                previous = page - 1;
+            }
+            if (page < totalPages) {
+                nextPage = page + 1;
+            }
 
             // Render trang cùng với dữ liệu doanh thu
             res.render("viewRevenueCompany", {
+                type,
+                currentPage: page,
+                totalPages: totalPages,
+                totalRecords: totalRecords,
+                min: min,
+                max: max,
+                nextPage: nextPage,
+                previous: previous,
                 layout: "main",
                 title: "RevenueCompany",
+                branch: MaChiNhanh,
                 revenue: revenueData,
                 selectedType: type,
                 customHead: `
@@ -91,7 +145,6 @@ const revenueController = {
     getDishRevenue: async (req, res) => {
         const { sortType = "ASC", Date = "2024-01-07", month = 1, year = 2024} = req.query;
         const MaChiNhanh = parseInt(req.query.branch) || 0;
-        console.log(MaChiNhanh);
         const page = parseInt(req.query.page) || 1;
         const pageSize = parseInt(req.query.pageSize) || 10;
         const type = req.params.type;
@@ -205,6 +258,7 @@ const revenueController = {
 
         try {
             // Execute the SQL query
+            console.log(query);
             const result = await pool.request().query(query);
             const dishesData = result.recordset;
 
@@ -244,7 +298,10 @@ const revenueController = {
                 max: max,
                 nextPage: nextPage,
                 previous: previous,
+                branch: MaChiNhanh,
                 filters: { sortType, Date, month, year },
+                layout: 'main',
+                title: 'Dish Revenue',
                 customHead: `
                     <link rel="stylesheet" href="/CT/viewRevenue/DishRevenue.css">`               
             });
