@@ -6,6 +6,7 @@ const orderController = require('./orderController.js');
 const homePage = async (req, res) => {
     try {
         console.log('Home controller:', req.query);
+        
         const pool = await dbService.connect();
 
         // Extract query parameters
@@ -73,7 +74,10 @@ const homePage = async (req, res) => {
         const tables = tablesResult.recordset;
 
         // Retrieve user role from session
-        const userRole = req.session.userRole || 'customer';
+        const userRole = req.session.userRole || 'customer'; 
+
+        console.log(req.session);
+
         const userId = req.session.userId || null;
         let cardInfo = null;
         if (userRole === 'customer') {
@@ -114,6 +118,8 @@ const homePage = async (req, res) => {
             cardInfo,
             userId,
         };
+
+        console.log("userRole ",data.userRole);
 
     //    console.log('selectedArea:', selectedArea);
     //    console.log('branches', branches);

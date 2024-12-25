@@ -21,3 +21,36 @@ navLinks.forEach(link => {
         this.classList.add('active');
     });
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const logoutButton = document.getElementById("logoutButton");
+
+    // Gọi API checkAuth
+    axios.get('/auth/checkAuth')
+        .then(response => {
+            const { code, userRole } = response.data;
+
+            if (code === 1) {
+                // Nếu đã đăng nhập, hiển thị nút Logout
+                logoutButton.style.display = "inline-flex";
+
+                // Thêm sự kiện click cho nút Logout
+                logoutButton.addEventListener("click", () => {
+                    axios.post('/auth/logout')
+                        .then(() => {
+                            window.location.href = "/auth/signin"; // Chuyển hướng sau khi logout
+                        })
+                        .catch(error => {
+                            console.error("Error during logout:", error);
+                        });
+                });
+            } else {
+                // Nếu chưa đăng nhập, ẩn nút Logout
+                logoutButton.style.display = "none";
+            }
+        })
+        .catch(error => {
+            console.error("Error checking authentication:", error);
+            logoutButton.style.display = "none"; // Ẩn nút nếu xảy ra lỗi
+        });
+});

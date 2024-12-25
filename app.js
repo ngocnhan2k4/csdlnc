@@ -32,6 +32,7 @@ app.engine('hbs', expressHandlebars.engine({
     partialsDir: __dirname + '/src/views/partials/',
     helpers: {
         eq: (a, b) => a === b,
+        neq: (a, b) => a !== b,
         gt: (a, b) => a > b,
 
         dec: (a) => a - 1,
@@ -83,7 +84,12 @@ app.engine('hbs', expressHandlebars.engine({
             return result;
         },
 
-        increment: (index) => index + 1 // Helper mới
+        increment: (index) => index + 1, // Helper mới
+
+        checkRole: (userRole) => {
+            // Kiểm tra xem userRole có thuộc một trong ba vai trò không
+            return userRole === 'admin' || userRole === 'branch' || userRole === 'customer';
+        },
     }
 }));
 
@@ -98,6 +104,11 @@ app.use(session({
     cookie: { secure: false } // Đặt `secure: true` nếu dùng HTTPS
 }));
 
+app.use((req, res, next) => {
+    res.locals.userRoleAll = req.session.userRole;  // Truyền userRole vào res.locals
+    res.locals.userNameAll = req.session.userName;  // Truyền userName vào res.locals
+    next();
+});
 
 route(app);
 
