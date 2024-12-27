@@ -20,9 +20,22 @@ document.querySelector('.form').addEventListener('submit', async (event) => {
         });
 
         const result = await response.json();
+        console.log(result);
         if (response.ok) {
             alert(result.message);
-            // Redirect or do something on success
+
+            let userRole = result.userRole;
+            if (userRole) {
+                if (userRole === 'admin') {
+                    window.location.href = '/home';
+                }
+                else if (userRole === 'branch') {
+                    window.location.href = '/home';
+                }
+                else {
+                    window.location.href = '/home';
+                }
+            }
         } else {
             alert(result.message);
         }

@@ -1,51 +1,7 @@
 const dbService = require('../../sevices/dbService.js');
 
 const authController = {
-    // login: async (req, res) => {
-    //     const pool = await dbService.connect();
-    //     const { TenChiNhanh, SoDienThoai } = req.body;
-    //     const result = await pool.request()
-    //         .query(`
-    //             SELECT CASE 
-    //                 WHEN COUNT(*) > 0 THEN CAST(1 AS BIT) 
-    //                 ELSE CAST(0 AS BIT) 
-    //             END AS ExistsRecord
-    //             FROM ChiNhanh
-    //             WHERE SoDienThoai = '${SoDienThoai}' AND TenChiNhanh = N'${TenChiNhanh}';
-    //         `);
-    //         const exists = result.recordset[0]?.ExistsRecord;
-
-    //         res.status(200).json({
-    //             exists: exists === true, // Trả về true nếu bản ghi tồn tại
-    //         });
-    // },
-    // getDishFromBranch: async (req, res) => {
-    //     const pool = await dbService.connect();
-    //     const branchID = req.params.id;
-    //     const page = parseInt(req.query.page) || 1;
-    //     const limit = parseInt(req.query.limit) || 10;
-    //     const offset = (page - 1) * limit;  
-    //     const result = await pool.request()
-    //         .query(`
-    //             SELECT ma.MaMonAn, ma.TenMonAn,ma.Muc,ma.MoTa,ma.HinhAnh,ma.GiaHienTai 
-    //             From MonAn_KhuVuc makv, ChiNhanh cn, MonAn ma
-    //             where makv.MaKhuVuc= cn.KhuVuc and makv.MaMon = ma.MaMonAn and cn.MaChiNhanh=${branchID}
-    //             order by ma.MaMonAn
-    //             OFFSET ${offset} ROWS
-    //             FETCH NEXT ${limit} ROWS ONLY;
-    //         `);
-    //     res.status(200).json(result.recordset);
-    // },
-    
-
-
     getSignupForm: async (req, res) => {
-        // const pool = await dbService.connect();
-        // const { TenChiNhanh, SoDienThoai } = req.body;
-        // const result = await pool.request().
-        // query(`
-        // `);
-
 
         res.render("signup", {
             layout: "auth",
@@ -58,12 +14,6 @@ const authController = {
     },
 
     getSigninForm: async (req, res) => {
-        // const pool = await dbService.connect();
-        // const { TenChiNhanh, SoDienThoai } = req.body;
-        // const result = await pool.request().
-        // query(`
-
-        // `);
 
         res.render("signin", {
             layout: "auth",
@@ -77,14 +27,16 @@ const authController = {
 
     postSignin: async (req, res) => {
         try {
-            if (req.session.userRole) {
-                if (req.session.userRole === 'admin') {
+            req.session.userRole = "";
+            let userRole = req.session.userRole;
+            if (userRole) {
+                if (userRole === 'admin') {
                     // do something, redirect or return error
                     return res.status(400).json({ message: "Bạn đã đăng nhập với tư cách là admin!" });
                 }
-                else if (req.session.userRole === 'branch') {
+                else if (userRole === 'branch') {
                     // do something, redirect or return error
-                    return res.status(400).json({ message: "bạn đã đăng nhập với tư cách là chi nhánh!" });
+                    return res.status(400).json({ message: "Bạn đã đăng nhập với tư cách là chi nhánh!" });
                 }
                 else {
                     // do something, redirect or return error
@@ -98,9 +50,11 @@ const authController = {
                 return res.status(400).json({ message: "Username và password không được để trống!" });
             }
 
-            if (username === 'admin' && password === 'admin') {
-                req.session.userRole = 'admin'; // Store role in session
-                return res.status(200).json({ message: "Đăng nhập thành công với tư cách là Admin!", code: 1});
+            if (username === 'admin' && password === '0000000000') {
+                userRole = 'admin'; // Store role in session
+                req.session.userName = 'admin';
+                req.session.userRole = userRole;
+                return res.status(200).json({ message: "Đăng nhập thành công với tư cách là Admin!", code: 1, userRole});
             }
 
             const pool = await dbService.connect();
@@ -114,10 +68,12 @@ const authController = {
                     WHERE TenChiNhanh = @Username AND SoDienThoai = @Password
                 `);
             if (result1.recordset.length > 0) {
-                req.session.userRole = 'branch'; // Store role in session
+                userRole = 'branch'; // Store role in session
                 // Store branch ID in session
                 req.session.userId = result1.recordset[0].MaChiNhanh;
-                return res.status(200).json({ message: "Đăng nhập thành công với tu cách là Chi nhánh!", data: result1.recordset[0], code: 2});
+                req.session.userName = result1.recordset[0].TenChiNhanh;
+                req.session.userRole = userRole;
+                return res.status(200).json({ message: "Đăng nhập thành công với tu cách là Chi nhánh!", data: result1.recordset[0], code: 2, userRole});
             }
 
             
@@ -131,13 +87,15 @@ const authController = {
                 `);
 
             if (result.recordset.length > 0) {
-                req.session.userRole = 'customer'; // Store role in session
+                userRole = 'customer'; // Store role in session
                 console.log('result: ', result.recordset[0]);
                 // Store customer ID in session
                 req.session.userId = result.recordset[0].MaTheKhachHang;
                 // Store type of card in session
                 req.session.cardType = result.recordset[0].LoaiThe;
-                return res.status(200).json({ message: "Đăng nhập thành công với tư cách là khách hàng!", data: result.recordset[0], code: 3 });
+                req.session.userName = result.recordset[0].HoTen;
+                req.session.userRole = userRole;
+                return res.status(200).json({ message: "Đăng nhập thành công với tư cách là khách hàng!", data: result.recordset[0], code: 3, userRole });
             } else {
                 return res.status(404).json({ message: "Tên đăng nhập hoặc mật khẩu không tồn tại!" });
             }
@@ -213,6 +171,58 @@ const authController = {
         } catch (error) {
             console.error("Error in postSignup:", error);
             return res.status(500).json({ message: "Lỗi server!", error });
+        }
+    },
+
+    checkAuth: async (req, res) => {
+        try {
+            // Kiểm tra xem userRole có trong session hay không
+            if (req.session && req.session.userRole) {
+                return res.status(200).json({ 
+                    message: "Người dùng đã đăng nhập.", 
+                    userRole: req.session.userRole, 
+                    code: 1 
+                });
+            } else {
+                return res.status(200).json({ 
+                    message: "Người dùng chưa đăng nhập.", 
+                    userRole: null, 
+                    code: 0 
+                });
+            }
+        } catch (error) {
+            return res.status(500).json({ 
+                message: "Lỗi server!", 
+                error 
+            });
+        }
+    },   
+    
+    logout: async (req, res) => {
+        try {
+            // Xóa toàn bộ session
+            req.session.destroy(err => {
+                if (err) {
+                    // Nếu có lỗi khi xóa session
+                    console.error("Lỗi khi xóa session:", err);
+                    return res.status(500).json({ 
+                        message: "Lỗi khi đăng xuất!", 
+                        error: err 
+                    });
+                }
+    
+                // Đăng xuất thành công
+                return res.status(200).json({ 
+                    message: "Đăng xuất thành công!" 
+                });
+            });
+        } catch (error) {
+            // Xử lý lỗi chung
+            console.error("Lỗi server:", error);
+            return res.status(500).json({ 
+                message: "Lỗi server!", 
+                error 
+            });
         }
     },
 }

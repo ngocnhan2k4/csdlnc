@@ -79,9 +79,14 @@ const employeeController = {
                 SELECT nv.MaNhanVien, nv.HoTen, bp.TenBoPhan, nv.NgayVaoLam, nv.NgayNghiViec
                 FROM NhanVien nv
                 LEFT JOIN (
-                    SELECT ls.MaNhanVien, ls.BoPhanLamViec, ls.MaChiNhanh, MAX(ls.NgayBatDau) AS NgayMoiNhat
+                    SELECT ls.MaNhanVien, ls.BoPhanLamViec, ls.MaChiNhanh, ls.NgayBatDau
                     FROM LichSuLamViec ls
-                    GROUP BY ls.MaNhanVien, ls.BoPhanLamViec, ls.MaChiNhanh
+                    WHERE ls.NgayBatDau = (
+                        SELECT TOP 1 NgayBatDau
+                        FROM LichSuLamViec
+                        WHERE MaNhanVien = ls.MaNhanVien
+                        ORDER BY NgayBatDau DESC
+                    )
                 ) AS ls ON nv.MaNhanVien = ls.MaNhanVien
                 LEFT JOIN BoPhanHeThong bp ON ls.BoPhanLamViec = bp.MaBoPhan
                 LEFT JOIN ChiNhanh cn ON ls.MaChiNhanh = cn.MaChiNhanh
@@ -181,9 +186,14 @@ const employeeController = {
                 SELECT nv.MaNhanVien, nv.HoTen, bp.TenBoPhan, nv.NgayVaoLam, nv.NgayNghiViec
                 FROM NhanVien nv
                 LEFT JOIN (
-                    SELECT ls.MaNhanVien, ls.BoPhanLamViec, ls.MaChiNhanh, MAX(ls.NgayBatDau) AS NgayMoiNhat
+                    SELECT ls.MaNhanVien, ls.BoPhanLamViec, ls.MaChiNhanh, ls.NgayBatDau
                     FROM LichSuLamViec ls
-                    GROUP BY ls.MaNhanVien, ls.BoPhanLamViec, ls.MaChiNhanh
+                    WHERE ls.NgayBatDau = (
+                        SELECT TOP 1 NgayBatDau
+                        FROM LichSuLamViec
+                        WHERE MaNhanVien = ls.MaNhanVien
+                        ORDER BY NgayBatDau DESC
+                    )
                 ) AS ls ON nv.MaNhanVien = ls.MaNhanVien
                 LEFT JOIN BoPhanHeThong bp ON ls.BoPhanLamViec = bp.MaBoPhan
                 LEFT JOIN ChiNhanh cn ON ls.MaChiNhanh = cn.MaChiNhanh
