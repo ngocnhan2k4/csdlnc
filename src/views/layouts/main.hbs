@@ -78,13 +78,34 @@
 
         <!-- Login/Signup Button -->
         <div class="auth-button-container">
-          <a href="/auth/signin" class="auth-button">
-            <svg class="auth-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-            Login/Signup
+          <a href="
+              {{#if (checkRole userRoleAll)}}
+                  {{#if (eq userRoleAll 'admin')}}
+                      /admin
+                  {{else}}
+                      {{#if (eq userRoleAll 'branch')}}
+                          /branch-profile
+                      {{else}}
+                          /auth/signin
+                      {{/if}}
+                  {{/if}}
+              {{else}}
+                  /auth/signin
+              {{/if}}"
+              class="auth-button">
+              <svg class="auth-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+
+              {{#if (checkRole userRoleAll)}}
+                  {{userNameAll}}
+              {{else}}
+                  Login/Signup
+              {{/if}}
           </a>
+
+          <button class="logout-button" id="logoutButton">Logout</button>
         </div>
       </div>
     </div>
@@ -149,5 +170,4 @@
 
 </body>
 </html>
-
 <script src="/main.js"></script>
