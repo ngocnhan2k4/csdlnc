@@ -90,6 +90,10 @@ app.engine('hbs', expressHandlebars.engine({
             // Kiểm tra xem userRole có thuộc một trong ba vai trò không
             return userRole === 'admin' || userRole === 'branch' || userRole === 'customer';
         },
+
+        ifEquals: (arg1, arg2, options) => {
+            return (arg1 === arg2) ? options.fn(this) : options.inverse(this);
+        },
     }
 }));
 

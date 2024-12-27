@@ -1,31 +1,8 @@
-// Lấy tất cả các liên kết trong navigation
-const navLinks = document.querySelectorAll('.nav-link');
-
-// Lấy đường dẫn hiện tại
-const currentPath = window.location.pathname;
-
-// Kiểm tra và thêm lớp 'active' dựa trên URL
-navLinks.forEach(link => {
-    if (link.getAttribute('href') === currentPath) {
-        link.classList.add('active');
-    }
-});
-
-// Lặp qua từng liên kết và thêm sự kiện click
-navLinks.forEach(link => {
-    link.addEventListener('click', function () {
-        // Xóa lớp 'active' khỏi tất cả các liên kết
-        navLinks.forEach(nav => nav.classList.remove('active'));
-
-        // Thêm lớp 'active' cho liên kết được nhấn
-        this.classList.add('active');
-    });
-});
-
 document.addEventListener("DOMContentLoaded", () => {
+    const navContainer = document.querySelector('.nav'); // Thẻ <nav> chứa các liên kết
     const logoutButton = document.getElementById("logoutButton");
 
-    // Gọi API checkAuth
+    // Gọi API checkAuth để lấy userRole
     axios.get('/auth/checkAuth')
         .then(response => {
             const { code, userRole } = response.data;
@@ -44,13 +21,109 @@ document.addEventListener("DOMContentLoaded", () => {
                             console.error("Error during logout:", error);
                         });
                 });
+
+                // Tạo navigation dựa trên userRole
+                const navData = {
+                    admin: [
+                        { text: 'Home', href: '/home' },
+                        { text: 'Revenue', href: '/company/revenue' },
+                        { text: 'Dish Revenue', href: '/company/revenue/dish' },
+                        { text: 'Manage Dish', href: '/company' },
+                        { text: 'Manage Order', href: '/company/order' }
+                    ],
+                    branch: [
+                        { text: 'Home', href: '/home' },
+                        { text: 'Manage Employee', href: '/company/employee' },
+                        { text: 'Restaurants', href: '/restaurants' },
+                        { text: 'Track Order', href: '/orders' }
+                    ],
+                    default: [
+                        { text: 'Home', href: '/home' },
+                        { text: 'Special Offers', href: '/' },
+                        { text: 'Restaurants', href: '/' },
+                        { text: 'Track Order', href: '/' }
+                    ]
+                };
+
+                const roleLinks = navData[userRole] || navData.default;
+
+                // Làm sạch nội dung <nav>
+                navContainer.innerHTML = '';
+
+                // Tạo liên kết động
+                roleLinks.forEach(linkData => {
+                    const link = document.createElement('a');
+                    link.textContent = linkData.text;
+                    link.href = linkData.href;
+                    link.classList.add('nav-link');
+                    navContainer.appendChild(link);
+                });
+
+                // Cập nhật trạng thái active
+                const savedActiveLink = localStorage.getItem('activeLink') || '/home';
+                updateActiveLink(navContainer.querySelectorAll('.nav-link'), savedActiveLink);
             } else {
                 // Nếu chưa đăng nhập, ẩn nút Logout
                 logoutButton.style.display = "none";
+
+                // Thiết lập liên kết mặc định khi chưa đăng nhập
+                const defaultLinks = [
+                    { text: 'Home', href: '/home' },
+                    { text: 'Special Offers', href: '/' },
+                    { text: 'Restaurants', href: '/' },
+                    { text: 'Track Order', href: '/' }
+                ];
+
+                navContainer.innerHTML = ''; // Làm sạch nội dung <nav>
+
+                // Tạo liên kết động cho trạng thái chưa đăng nhập
+                defaultLinks.forEach(linkData => {
+                    const link = document.createElement('a');
+                    link.textContent = linkData.text;
+                    link.href = linkData.href;
+                    link.classList.add('nav-link');
+                    navContainer.appendChild(link);
+                });
+
+                // Thiết lập trạng thái active ban đầu là "/home"
+                updateActiveLink(navContainer.querySelectorAll('.nav-link'), '/home');
             }
         })
         .catch(error => {
             console.error("Error checking authentication:", error);
             logoutButton.style.display = "none"; // Ẩn nút nếu xảy ra lỗi
         });
+
+    // Lắng nghe sự kiện click trên navigation
+    navContainer.addEventListener('click', (event) => {
+        const target = event.target;
+
+        if (target.classList.contains('nav-link')) {
+            event.preventDefault();
+
+            // Lưu link được bấm vào localStorage
+            const href = target.getAttribute('href');
+            localStorage.setItem('activeLink', href);
+
+            // Chuyển hướng tới link
+            window.location.href = href;
+        }
+    });
+
+    // Khi tải lại trang, thiết lập trạng thái active từ localStorage
+    const savedActiveLink = localStorage.getItem('activeLink') || '/home';
+    updateActiveLink(navContainer.querySelectorAll('.nav-link'), savedActiveLink);
 });
+
+// Hàm cập nhật trạng thái 'active'
+function updateActiveLink(navLinks, savedPath = '/home') {
+    navLinks.forEach(link => {
+        // Xóa lớp 'active' khỏi tất cả các liên kết
+        link.classList.remove('active');
+
+        // Thêm lớp 'active' nếu đường dẫn khớp
+        if (link.getAttribute('href') === savedPath) {
+            link.classList.add('active');
+        }
+    });
+}

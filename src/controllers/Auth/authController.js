@@ -50,7 +50,7 @@ const authController = {
                 return res.status(400).json({ message: "Username và password không được để trống!" });
             }
 
-            if (username === 'admin' && password === 'admin') {
+            if (username === 'admin' && password === '0000000000') {
                 userRole = 'admin'; // Store role in session
                 req.session.userName = 'admin';
                 req.session.userRole = userRole;
