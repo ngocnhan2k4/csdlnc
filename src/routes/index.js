@@ -54,7 +54,7 @@ function route(app) {
     app.use("/company/dish",midd.checkRole('admin'), dishCompanyRouter); // chỉ admin với được vào đường dẫn này
     app.use("/company/employee", employeeCompanyRouter);
 
-    app.use("/company",  manageFoodRouter);
+    app.use("/company",midd.checkRole('admin'), manageFoodRouter);
 }
 
 
