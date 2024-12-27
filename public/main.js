@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // Cập nhật trạng thái active
                 const savedActiveLink = localStorage.getItem('activeLink') || '/home';
+                console.log(savedActiveLink);
                 updateActiveLink(navContainer.querySelectorAll('.nav-link'), savedActiveLink);
             } else {
                 // Nếu chưa đăng nhập, ẩn nút Logout
