@@ -37,10 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         { text: 'Manage Employee', href: '/company/employee' }
                     ],
                     default: [
-                        { text: 'Home', href: '/home' },
-                        { text: 'Special Offers', href: '/' },
-                        { text: 'Restaurants', href: '/' },
-                        { text: 'Track Order', href: '/' }
+                        { text: 'Home', href: '/home' },                        
                     ]
                 };
 
