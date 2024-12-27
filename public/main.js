@@ -29,13 +29,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         { text: 'Revenue', href: '/company/revenue' },
                         { text: 'Dish Revenue', href: '/company/revenue/dish' },
                         { text: 'Manage Dish', href: '/company' },
-                        { text: 'Manage Order', href: '/company/order' }
+                        { text: 'Manage Order', href: '/company/order' },
+                        { text: 'Manage Employee', href: '/company/employee' }
                     ],
                     branch: [
                         { text: 'Home', href: '/home' },
-                        { text: 'Manage Employee', href: '/company/employee' },
-                        { text: 'Restaurants', href: '/restaurants' },
-                        { text: 'Track Order', href: '/orders' }
+                        { text: 'Manage Employee', href: '/company/employee' }
                     ],
                     default: [
                         { text: 'Home', href: '/home' },

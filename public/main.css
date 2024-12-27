@@ -45,17 +45,19 @@
 }
 
 .nav {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
+    display: flex !important;
+    align-items: center !important;
+    gap: 2rem !important;
+    flex-wrap: nowrap;
 }
 
 .nav-link {
-    color: #111827;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    text-decoration: none;
+    color: #111827 !important;
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    flex-wrap: nowrap;
 }
 
 .nav-link:hover {
