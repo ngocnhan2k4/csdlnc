@@ -7,6 +7,7 @@ document.getElementById("addDishForm").addEventListener("submit", async (e) => {
         MoTa: document.getElementById("MoTa").value,
         HinhAnh: document.getElementById("HinhAnh").value,
         GiaHienTai: document.getElementById("GiaHienTai").value,
+        TenKhuVuc: document.getElementById("area").options[document.getElementById("area").selectedIndex].text
     };
 
     console.log('Dữ liệu gửi đi:',formData);

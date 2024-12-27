@@ -24,6 +24,7 @@
           <div class="add-des"><label for="MoTa">Mô Tả Món Ăn:</label></div>
           <div class="add-img"><label for="HinhAnh">Hình Ảnh:</label></div>
           <div class="add-price"><label for="GiaHienTai">Giá Hiện Tại:</label></div>
+          <div class="add-option-area"><label for="ChonKhuVuc">Chọn Khu Vực:</label></div>
         </div>
         <div class="add-body">
           <div>
@@ -63,8 +64,19 @@
               name="GiaHienTai"
               required
             /></div>
+
+          <div>
+            <select class="add-in-option-area" id="area" name="area" required>
+              <option value="" disabled selected>Chọn khu vực</option>
+              {{#each areas}}
+              <option value="khu-vuc">{{TenKhuVuc}}</option>
+              {{/each}}
+            </select>
+          </div>
+
           <div class="add-in-sub">
-            <button class="add-style" type="submit">Thêm Món Ăn</button></div>
+            <button class="add-style" type="submit">Thêm Món Ăn</button>
+          </div>
         </div>
       </form>
 
@@ -175,26 +187,24 @@
           </button>
         </a>
 
-         <form id="view-order" class="mt-5">
-            <div>
-              <input
-                type="text"
-                id="branch"
-                class="input-branch"
-                placeholder="Nhập mã chi nhánh..."
-              />
-              <button class="submit-branch">submit</button>
-            </div>
-          </form>
-          
+        <form id="view-order" class="mt-5">
+          <div>
+            <input
+              type="text"
+              id="branch"
+              class="input-branch"
+              placeholder="Nhập mã chi nhánh..."
+            />
+            <button class="submit-branch">submit</button>
+          </div>
+        </form>
+
       </div>
 
-     
-   
       <div class="manage-order-title">
         <div class="direct-order" id="tructiep">Direct order</div>
         <div class="online-order" id="online">Online order</div>
-        <div class="reservation-order" id ="giaohang">Reservation order</div>
+        <div class="reservation-order" id="giaohang">Reservation order</div>
       </div>
 
       <div class="manage-order-body">

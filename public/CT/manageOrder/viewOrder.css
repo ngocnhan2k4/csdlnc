@@ -17,6 +17,7 @@
 }
 .review-container{
     margin-top:200px;
+    margin-bottom:200px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -26,28 +27,44 @@
 
 .code{
     width:10%;
+    display: flex;
+    justify-content: center;
 }
 
 .bill{
     width: 10%;
+    display: flex;
+    justify-content: center;
 }
 .service{
     width: 10%;
+    display: flex;
+    justify-content: center;
 }
 .position{
     width: 10%;
+    display: flex;
+    justify-content: center;
 }
 .quanlity{
     width: 10%;
+    display: flex;
+    justify-content: center;
 }
 .money{
     width: 10%;
+    display: flex;
+    justify-content: center;
 }
 .space{
-    width:20%
+    width:20%;
+    display: flex;
+    justify-content: center;
 }
 .comment{
     width: 30%;
+    display: flex;
+    justify-content: center;
 }
 .btn-review{
     border-radius: 5px;

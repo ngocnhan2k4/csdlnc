@@ -175,6 +175,9 @@ const dishController = {
                 WHERE cn.KhuVuc = ${areaID}
             `);
 
+            console.log('khu vuc:',areaID);
+     const next_page = page +1;
+     const pre_page = page -1;
     res.render("manageFoodArea", {
       layout: "main",
       title: "Food of Area",
@@ -190,6 +193,8 @@ const dishController = {
       areaID: areaID,
       currentIndex: index,
       branchs: branchOfArea.recordset,
+      next_page:next_page,
+      pre_page:pre_page,
     });
   },
 
@@ -208,11 +213,49 @@ const dishController = {
   createDish: async (req, res) => {
     try {
       const pool = await dbService.connect();
-      const { TenMonAn, Muc, MoTa, HinhAnh, GiaHienTai } = req.body;
+      const { TenMonAn, Muc, MoTa, HinhAnh, GiaHienTai, TenKhuVuc } = req.body;
+      console.log('Ten khu vuc:',TenKhuVuc);
 
       const result = await pool.request().query(`
                     EXEC sp_AddDish @TenMonAn = N'${TenMonAn}', @GiaHienTai = ${GiaHienTai}, @Muc = N'${Muc}', @MoTa = N'${MoTa}', @HinhAnh = N'${HinhAnh}'
-                `);
+                    
+                    `);
+      const idArea = await pool.request().query(`
+                  SELECT MaKhuVuc as idrea
+                  FROM KhuVuc
+                  WHERE TenKhuVuc = N'${TenKhuVuc}'
+                    `);
+      const idDish = await pool.request().query(`
+                  SELECT TOP 1 MaMonAn
+                  FROM MonAn
+                  ORDER BY MaMonAn DESC;
+                    `);
+      // Lấy ID món ăn từ kết quả trả về
+      const newDishId = idDish.recordset[0].MaMonAn;
+      const id = idArea.recordset[0].idrea;
+      const dishArea = await pool.request().query(`
+        INSERT INTO MonAn_KhuVuc (MaKhuVuc, MaMon)
+        VALUES (${id}, ${newDishId});
+          `);
+
+      const allbranchofarea = await pool.request().query(`
+        select MaChiNhanh
+        from ChiNhanh
+        where KhuVuc = ${id}
+          `);
+
+        for (const branch of allbranchofarea.recordset) {
+            // Lặp qua tất cả các MaChiNhanh và thực hiện INSERT cho từng chi nhánh
+            await pool.request().query(`
+                INSERT INTO TinhTrangMonAn (MaMon, MaChiNhanh, TinhTrangGiaoHang, TinhTrangPhucVu)
+                VALUES (${newDishId}, ${branch.MaChiNhanh}, N'Có giao hàng', N'Có phục vụ')
+            `);
+        }
+        
+      
+
+      console.log("ID món ăn vừa thêm:", newDishId);
+      console.log("ID khu vuc vua them:", id);
 
       res.status(200).json({
         success: true,
@@ -232,6 +275,12 @@ const dishController = {
     const pool = await dbService.connect();
     const { MaMonAn } = req.body; // Đọc tham số từ body khi dùng DELETE
     try {
+      const deleteTTMA = await pool.request().query(`
+         DELETE FROM TinhTrangMonAn WHERE MaMon = ${MaMonAn};
+      `);
+      const deleteMAKV = await pool.request().query(`
+         DELETE FROM MonAn_KhuVuc WHERE MaMon = ${MaMonAn};
+      `);
       const result = await pool.request().query(`
           EXEC sp_DeleteDish @MaMonAn = ${MaMonAn}
       `);

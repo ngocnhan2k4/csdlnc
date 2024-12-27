@@ -57,56 +57,56 @@
       </div>
 
         <div class="listDish" id="listDish"> 
-          {{#each dishes}}
-            <div class="flex-dish">
-              <div class="dish">
+          <div class="dish-top">
+            {{#each dishes}}
+              <div class="flex-dish">
+                <div class="dish">
 
-                <div>
-                  <h2>{{TenMonAn}}</h2>
-                  <p>{{MoTa}}</p>
-                  <p class ="price">Giá: {{GiaHienTai}}</p>
+                  <div class="infor-dish">
+                    <h2>{{TenMonAn}}</h2>
+                    <p>{{MoTa}}</p>
+                    <p class ="price">Giá: {{GiaHienTai}}</p>
+                  </div>
+                
+                  <div class="infor-img" > <img src="{{HinhAnh}}" alt="{{TenMonAn}}" /></div>
                 </div>
-              
-                <div> <img src="{{HinhAnh}}" alt="{{TenMonAn}}" /></div>
+                
+                <input 
+                  class="check-box-service" 
+                  type="checkbox" 
+                  id="check-{{MaMonAn}}" 
+                  data-id="{{MaMonAn}}"
+                  data-branch="{{MaChiNhanh}}"
+                  {{#if (eq TinhTrangPhucVu "Có phục vụ")}}checked{{/if}}
+                >
               </div>
-              
-              <input 
-                class="check-box-service" 
-                type="checkbox" 
-                id="check-{{MaMonAn}}" 
-                data-id="{{MaMonAn}}"
-                data-branch="{{MaChiNhanh}}"
-                {{#if (eq TinhTrangPhucVu "Có phục vụ")}}checked{{/if}}
-              >
-            </div>
-          {{/each}}
+            {{/each}}
+          </div>
+
+          <div class="pagination mt-5" id="pagi-hbs">
+            {{#if (gt currentPage 1)}}
+                <a href="?areaID={{areaID}}&page={{sub currentPage 1}}&limit=3" class="page-link">Previous</a>
+            {{/if}}
+
+            {{#each (range_minh 1 totalPages)}}
+                {{#if (eq this ../currentPage)}}
+                    <span class="page-link active">{{this}}</span>
+                {{else}}
+                  <a href="?areaID={{../areaID}}&page={{this}}&limit=3" class="page-link">{{this}}</a>
+                {{/if}}
+            {{/each}}
+
+            {{#if (lt currentPage totalPages)}}
+                <a href="?areaID={{areaID}}&page={{add currentPage 1}}&limit=3" class="page-link">Next</a>
+            {{/if}}
+            
+          </div>
+        
         </div>
 
         <div class="list-by-query" id ="list-by-query">
 
         </div>
-
     </div>
   </div>
-
- 
-    <div class="pagination" id="pagi-hbs">
-      {{#if (gt currentPage 1)}}
-          <a href="?areaID={{areaID}}&page={{sub currentPage 1}}&limit=3" class="page-link">Previous</a>
-      {{/if}}
-
-      {{#each (range_minh 1 totalPages)}}
-          {{#if (eq this ../currentPage)}}
-              <span class="page-link active">{{this}}</span>
-          {{else}}
-             <a href="?areaID={{../areaID}}&page={{this}}&limit=3" class="page-link">{{this}}</a>
-          {{/if}}
-      {{/each}}
-
-      {{#if (lt currentPage totalPages)}}
-          <a href="?areaID={{areaID}}&page={{add currentPage 1}}&limit=3" class="page-link">Next</a>
-      {{/if}}
-      
-    </div>
-
 </div>

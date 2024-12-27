@@ -70,12 +70,12 @@ $(document).ready(function () {
                   htmlContent += `
                     <div class="flex-dish">
                       <div class="dish">
-                        <div>
+                        <div class="infor-dish">
                           <h2>${dish.TenMonAn}</h2>
                           <p>${dish.MoTa}</p>
                           <p class="price">Giá: ${dish.GiaHienTai}</p>
                         </div>
-                        <div>
+                        <div class="infor-img">
                           <img src="${dish.HinhAnh}" alt="${dish.TenMonAn}" />
                         </div>
                       </div>

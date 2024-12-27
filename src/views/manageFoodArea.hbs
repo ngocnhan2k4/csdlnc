@@ -49,44 +49,47 @@
         <div class="serving-status">Serving status</div>
       </div>
 
-        <div class="listDish"> 
-          
+        <div class="listDishArea" id="listDish"> 
+        
             {{#each dishes}}
               <div class="flex-dish">
                 <div class="dish">
 
-                  <div>
+                  <div class="infor-dish">
                     <h2>{{TenMonAn}}</h2>
                     <p>{{MoTa}}</p>
                     <p class ="price">Giá: {{GiaHienTai}}</p>
                   </div>
                 
-                  <div> <img src="{{HinhAnh}}" alt="{{TenMonAn}}" /></div>
-
-                </div>                
+                  <div class="infor-img" > <img src="{{HinhAnh}}" alt="{{TenMonAn}}" /></div>
+                </div>
               </div>
             {{/each}}
-      </div>
+
+            <div class="pagination mt-5" id="pagi-hbs">
+              {{#if (gt currentPage 1)}}
+                  <a href='/company/dish/byarea/{{areaID}}?index={{currentIndex}}&page={{pre_page}}&limit=3' class="page-link">Previous</a>
+              {{/if}}
+
+              {{#each (range_minh 1 totalPages)}}
+                  {{#if (eq this ../currentPage)}}
+                      <span class="page-link active">{{this}}</span>
+                  {{else}}
+                    <a href='/company/dish/byarea/{{../areaID}}?index={{../currentIndex}}&page={{this}}&limit=3' class="page-link">{{this}}</a>
+                  {{/if}}
+              {{/each}}
+
+              {{#if (lt currentPage totalPages)}}
+                  <a href='/company/dish/byarea/{{areaID}}?index={{currentIndex}}&page={{next_page}}&limit=3' class="page-link">Next</a>
+              {{/if}}
+              
+            </div>
+        
+          
+          
+        
+        </div>
+        
     </div>
   </div>
-
-    <div class="pagination">
-      {{#if (gt currentPage 1)}}
-       
-          <a href="?index={{currentIndex}}&page={{sub currentPage 1}}&limit=3" class="page-link">Previous</a>
-      {{/if}}
-
-      {{#each (range_minh 1 totalPages)}}
-          {{#if (eq this ../currentPage)}}
-              <span class="page-link active">{{this}}</span>
-          {{else}}
-              <a href="?index={{../currentIndex}}&page={{this}}&limit=3" class="page-link">{{this}}</a>
-          {{/if}}
-      {{/each}}
-
-      {{#if (lt currentPage totalPages)}}
-          <a href="?index={{currentIndex}}&page={{add currentPage 1}}&limit=3" class="page-link">Next</a>
-       
-      {{/if}}
-    </div>
 </div>
