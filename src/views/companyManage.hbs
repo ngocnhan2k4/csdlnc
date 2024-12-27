@@ -6,7 +6,6 @@
           <button class="button-order">
             <h2>Manager Dish:</h2>
           </button>
-          <div class="All-area">All area:</div>
           {{#each areas}}
             <div class="company-area">
               <a
@@ -101,7 +100,7 @@
         <button class="search-style" type="submit">Xóa Món Ăn</button>
       </form>
 
-      <h1>Cập Nhật Món Ăn</h1>
+      <h1 class="mt-5">Cập Nhật Món Ăn</h1>
 
       <!-- Form Cập Nhật Món Ăn -->
       <form id="updateDishForm" class="form-add-dish">
@@ -171,34 +170,38 @@
         </div>
 
         <a href="company/order?page=1&limit=10">
-          <button class="button-order">
+          <button class="button-order mt-5">
             View all branch
           </button>
         </a>
+
+         <form id="view-order" class="mt-5">
+            <div>
+              <input
+                type="text"
+                id="branch"
+                class="input-branch"
+                placeholder="Nhập mã chi nhánh..."
+              />
+              <button class="submit-branch">submit</button>
+            </div>
+          </form>
+          
       </div>
 
-      <form id="view-order">
-        <div class="">
-          View order by branch
-        </div>
-        <div>
-          <label for="branch">Mã chi nhánh</label>
-          <input
-            type="text"
-            id="branch"
-            class="input-branch"
-            placeholder="Nhập mã chi nhánh..."
-          />
-          <button class="submit-branch">submit</button>
-        </div>
-      </form>
+     
+   
+      <div class="manage-order-title">
+        <div class="direct-order" id="tructiep">Direct order</div>
+        <div class="online-order" id="online">Online order</div>
+        <div class="reservation-order" id ="giaohang">Reservation order</div>
+      </div>
 
       <div class="manage-order-body">
-        <div class="manage-order-header mt-3">
+        <div class="manage-order-header">
           <div class="header-col-1">
             #
           </div>
-
           <div class="header-col-2">
             ORDER ID
           </div>
@@ -221,18 +224,16 @@
 
         <div class="manage-order-content">
 
-           <div id="order-results">
+          <div id="order-results">
             <!-- Dữ liệu sẽ được hiển thị ở đây -->
           </div>
         </div>
 
-        <div class="manage-order-footer" id="minOfmax" >
-         
+        <div class="manage-order-footer" id="minOfmax">
+
         </div>
 
       </div>
-
-     
 
     </div>
 

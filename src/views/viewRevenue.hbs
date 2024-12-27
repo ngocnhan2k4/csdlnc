@@ -3,25 +3,22 @@
 
     <!-- Dropdown chọn loại báo cáo -->
     <div class="form-group">
-        <label for="type">Chọn loại:</label>
-        <select v-model="selectedType" class="form-select">
-            <option disabled value="">Chọn loại báo cáo</option>
-            <option v-for="(type, index) in revenueTypes" :value="type" :key="index">
-                {{ type }}
-            </option>
+        <label for="type">Choose type of revenue:</label>
+        <select id="type" v-model="type" class="form-select">
+            <option value="day">Day</option>
+            <option value="month">Month</option>
+            <option value="year">Year</option>
         </select>
     </div>
 
     <!-- Dropdown chọn chi nhánh -->
-    <div class="form-group">
-        <label for="branch">Chọn chi nhánh:</label>
-        <select v-model="selectedBranch" class="form-select">
-            <option disabled value="">Chọn chi nhánh</option>
-            <option v-for="(branch, index) in branch" :value="branch.TenChiNhanh" :key="index">
-                {{ branch.TenChiNhanh }}
-            </option>
-        </select>
-
+    <div class="form-group mt-3">
+        <label for="branch">Branch:</label>
+        <select id="branch" v-model="branch" class="form-select">
+            <option value="0" selected>All</option>
+            {{#each branches}}
+            <option value="{{MaChiNhanh}}">{{TenChiNhanh}}</option>
+            {{/each}}
         </select>
     </div>
 

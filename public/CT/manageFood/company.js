@@ -160,18 +160,20 @@ try {
 
 // Khai báo biến toàn cục để lưu dữ liệu
 let orderData = {};
+let branchID = 0;
+let type ="";
 
 // Lắng nghe sự kiện submit
 document.getElementById('view-order').addEventListener('submit', function (event) {
-    event.preventDefault(); // Ngăn form gửi yêu cầu mặc định
+    event.preventDefault(); 
 
-    // Lấy giá trị mã chi nhánh từ input
     const branchCode = document.getElementById('branch').value;
+    branchID = branchCode;
 
-    // Tạo URL với query string
+    
     const url = `/company/order/branch/${encodeURIComponent(branchCode)}?page=1&limit=20`;
 
-    // Gửi yêu cầu GET tới API
+   
     fetch(url, {
         method: 'GET',
         headers: {
@@ -187,7 +189,6 @@ document.getElementById('view-order').addEventListener('submit', function (event
         .then(data => {
             // Lưu dữ liệu vào đối tượng orderData
             orderData = data;
-
             // Hiển thị dữ liệu hoặc thực hiện các thao tác
             renderOrders(orderData.orders); // Hiển thị danh sách orders
             minOfmax(orderData.min, orderData.max, orderData.totalOrders, orderData.currentPage, orderData.totalPage,data.branchCode);
@@ -279,6 +280,60 @@ function minOfmax(min, max, total, currentPage, totalPage, branchCode) {
     });
 }
 
+function minOfmaxType(min, max, total, currentPage, totalPage, branchCode,type) {
+    console.log('vao ham type:');
+
+    const resultsContainer = document.getElementById('minOfmax');
+    resultsContainer.innerHTML = ''; // Xóa nội dung cũ nếu có
+
+    const orderElement = document.createElement('div');
+    orderElement.classList.add('order-current');
+
+    // Tạo nội dung HTML
+    orderElement.innerHTML = `
+        <div class="of">
+            <div>${min} - ${max}</div> 
+            <div> of </div> 
+            <div>${total}</div>
+        </div>
+        
+        <div class="pagination">
+            <a
+                data-url="/company/order/branch/type/${encodeURIComponent(branchCode)}?Loai=${type}&page=${currentPage - 1}&limit=20"
+                id="prev-btn"
+                class="prev-btn"
+            >&#60;
+            </a>
+            <span class="pagination-info">
+                ${currentPage} / ${totalPage}
+            </span>
+            <a
+                data-url="/company/order/branch/type/${encodeURIComponent(branchCode)}?Loai=${type}&page=${currentPage + 1}&limit=20"
+                id="next-btn"
+                class="next-btn"
+            >&#62;
+            </a>
+        </div>
+    `;
+
+    resultsContainer.appendChild(orderElement); // Chèn nội dung vào container
+
+    // Thêm sự kiện click cho các nút
+    document.getElementById('prev-btn').addEventListener('click', function (event) {
+        event.preventDefault();
+        const url = this.getAttribute('data-url'); // Lấy đường dẫn từ data-url
+        console.log(url);
+        fetchOrdersType(url); // Gọi hàm fetchOrders để lấy dữ liệu mới
+    });
+
+    document.getElementById('next-btn').addEventListener('click', function (event) {
+        event.preventDefault();
+        const url = this.getAttribute('data-url'); // Lấy đường dẫn từ data-url
+        console.log(url);
+        fetchOrdersType(url); // Gọi hàm fetchOrders để lấy dữ liệu mới
+    });
+}
+
 function fetchOrders(url) {
     fetch(url, {
         method: 'GET',
@@ -311,4 +366,162 @@ function fetchOrders(url) {
             console.error('There was a problem with the fetch operation:', error);
         });
 }
+function fetchOrdersType(url) {
+    console.log('goi ham fetch type:');
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Lưu dữ liệu mới vào orderData
+            orderData = data;
 
+            // Hiển thị lại dữ liệu với trang mới
+            renderOrders(orderData.orders); 
+            minOfmaxType(
+                orderData.min,
+                orderData.max,
+                orderData.totalOrders,
+                orderData.currentPage,
+                orderData.totalPage,
+                orderData.branchCode,
+                type
+            );
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+}
+
+$(document).ready(function () {
+    // Gắn sự kiện click cho các phần tử trong .manage-order-title
+    $(".manage-order-title div").on("click", function () {
+      // Lấy ID của phần tử được click
+      const clickedId = $(this).attr("id");
+      console.log("Clicked element ID:", clickedId);
+  
+      // Thực hiện hành động tùy theo ID
+      if (clickedId === "tructiep") {
+        const branchCode = branchID;
+        type='T';
+
+        if (branchCode){
+            console.log('chi nhanh hien tai:',branchCode)
+
+            const url = `/company/order/branch/type/${branchCode}?Loai=T&page=1&limit=20`;
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Giả sử API trả về JSON
+            })
+            .then(data => {
+                // Lưu dữ liệu vào đối tượng orderData
+                orderData = data;
+                // Hiển thị dữ liệu hoặc thực hiện các thao tác
+                renderOrders(orderData.orders); // Hiển thị danh sách orders
+                minOfmaxType(orderData.min, orderData.max, orderData.totalOrders, orderData.currentPage, orderData.totalPage,data.branchCode,type);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+        }
+        else{
+            alert('Nhập chi nhánh bạn muốn tìm trước!');
+        }
+        
+
+      } else if (clickedId === "online") {
+        type='O';
+        const branchCode = branchID;
+        if (branchCode){
+            console.log('chi nhanh hien tai:',branchCode)
+
+            const url = `/company/order/branch/type/${branchCode}?Loai=O&page=1&limit=20`;
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Giả sử API trả về JSON
+            })
+            .then(data => {
+                // Lưu dữ liệu vào đối tượng orderData
+                orderData = data;
+                // Hiển thị dữ liệu hoặc thực hiện các thao tác
+                renderOrders(orderData.orders); // Hiển thị danh sách orders
+                minOfmaxType(orderData.min, orderData.max, orderData.totalOrders, orderData.currentPage, orderData.totalPage,data.branchCode,type);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+        }
+        else{
+            alert('Nhập chi nhánh bạn muốn tìm trước!');
+        }
+        
+      } else if (clickedId === "giaohang") {
+        type='G';
+        const branchCode = branchID;
+        if (branchCode){
+            console.log('chi nhanh hien tai:',branchCode)
+
+            const url = `/company/order/branch/type/${branchCode}?Loai=G&page=1&limit=20`;
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Giả sử API trả về JSON
+            })
+            .then(data => {
+                // Lưu dữ liệu vào đối tượng orderData
+                orderData = data;
+                // Hiển thị dữ liệu hoặc thực hiện các thao tác
+                renderOrders(orderData.orders); // Hiển thị danh sách orders
+                minOfmaxType(orderData.min, orderData.max, orderData.totalOrders, orderData.currentPage, orderData.totalPage,data.branchCode,type);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+        }
+        else{
+            alert('Nhập chi nhánh bạn muốn tìm trước!');
+        }
+        
+      } else {
+        alert("Unknown action!");
+      }
+  
+      // Thêm hiệu ứng highlight cho phần tử được click (tùy chọn)
+      $(".manage-order-title div").removeClass("active"); // Xóa lớp active cũ
+      $(this).addClass("active"); // Thêm lớp active cho phần tử được click
+    });
+  });
