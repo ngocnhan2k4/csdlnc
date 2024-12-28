@@ -36,9 +36,10 @@ const revenueController = {
                     WHERE (${MaChiNhanh} = 0)
                     OR (hd.NhanVienLap = ls.MaNhanVien and ls.MaChiNhanh=${MaChiNhanh});
                 `;
-            } else if (type === 'month') {
+            } 
+            if (type === 'month') {
                 query = `
-                   SELECT 
+                    SELECT 
                     YEAR(hd.NgayLap) AS Nam, 
                     MONTH(hd.NgayLap) AS Thang, 
                     SUM(hd.TongTien - hd.TienGiam) AS DoanhThu 
@@ -51,22 +52,23 @@ const revenueController = {
                 `;
                 countQuery = `
                     SELECT
-                    COUNT(DISTINCT YEAR(hd.NgayLap), MONTH(hd.NgayLap)) AS TotalCount
+                    COUNT(DISTINCT CONCAT(YEAR(hd.NgayLap), '-', MONTH(hd.NgayLap))) AS TotalCount
                     FROM HoaDon hd, LichSuLamViec ls
                     WHERE (${MaChiNhanh} = 0)
                     OR (hd.NhanVienLap = ls.MaNhanVien and ls.MaChiNhanh=${MaChiNhanh});
                 `;
-            } else if (type === 'year') {
+            }
+            if (type === 'year') {
                 query = `
-                   SELECT 
-                YEAR(hd.NgayLap) AS Nam, 
-                SUM(hd.TongTien - hd.TienGiam) AS DoanhThu 
-                FROM HoaDon hd, LichSuLamViec ls
-                WHERE (${MaChiNhanh} = 0)
-                OR (hd.NhanVienLap = ls.MaNhanVien and ls.MaChiNhanh=${MaChiNhanh})
-                GROUP BY YEAR(hd.NgayLap)
-                ORDER BY Nam
-                OFFSET ${offset} ROWS FETCH NEXT ${pageSize} ROWS ONLY;
+                    SELECT 
+                    YEAR(hd.NgayLap) AS Nam, 
+                    SUM(hd.TongTien - hd.TienGiam) AS DoanhThu 
+                    FROM HoaDon hd, LichSuLamViec ls
+                    WHERE (${MaChiNhanh} = 0)
+                    OR (hd.NhanVienLap = ls.MaNhanVien and ls.MaChiNhanh=${MaChiNhanh})
+                    GROUP BY YEAR(hd.NgayLap)
+                    ORDER BY Nam
+                    OFFSET ${offset} ROWS FETCH NEXT ${pageSize} ROWS ONLY;
                 `;
                 countQuery = `
                     SELECT
@@ -75,21 +77,9 @@ const revenueController = {
                     WHERE (${MaChiNhanh} = 0)
                     OR (hd.NhanVienLap = ls.MaNhanVien and ls.MaChiNhanh=${MaChiNhanh});
                 `;
-            } else {
-                return res.status(400).render("viewRevenueCompany", {
-                    layout: "main",
-                    title: "RevenueCompany",
-                    errorMessage: "Loại thống kê không hợp lệ!",
-                    revenue: [],
-                    selectedType: type,
-                    customHead: `
-                      <link rel="stylesheet" href="/CT/viewRevenue/viewRevenueCompany.css">
-                      <script defer src="/CT/viewRevenue/viewRevenueCompany.js"></script>`,
-                });
-            }
+            } 
 
             // Thực thi truy vấn
-            console.log(query);
             const result = await pool.request().query(query);
             revenueData = result.recordset;
             // Tính toán thông tin phân trang
@@ -258,7 +248,6 @@ const revenueController = {
 
         try {
             // Execute the SQL query
-            console.log(query);
             const result = await pool.request().query(query);
             const dishesData = result.recordset;
 
