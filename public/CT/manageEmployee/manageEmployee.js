@@ -43,6 +43,8 @@ document.addEventListener("DOMContentLoaded", function () {
     modal.style.display = "none"; // Ẩn modal khi trang tải xong
     reassignModal.style.display = "none";
 
+    fetchData(rowsPerPageSelect.value, pageInput.value, branchSelect.value, searchInput.value.trim());
+
     // Hiển thị modal khi nhấn nút "Add employee"
     addEmployeeBtn.addEventListener("click", () => {
         isEditMode = false; // Đặt lại trạng thái "Add"

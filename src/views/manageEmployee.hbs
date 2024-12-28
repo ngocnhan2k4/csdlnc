@@ -3,10 +3,21 @@
         <!-- Thêm phần chọn chi nhánh -->
         <div class="flex items-center gap-2">
             <select id="branch-select" class="border rounded p-2">
-                <option value="">All Branches</option>
-                {{#each branches}}
-                <option value="{{this.TenChiNhanh}}">{{this.TenChiNhanh}}</option>
-                {{/each}}
+                {{#if (checkRole userRoleAll)}}
+                    {{#if (eq userRoleAll 'branch')}}
+                        <option value="{{userNameAll}}">{{userNameAll}}</option>
+                    {{else}}
+                        <option value="">All Branches</option>
+                        {{#each branches}}
+                        <option value="{{this.TenChiNhanh}}">{{this.TenChiNhanh}}</option>
+                        {{/each}}
+                    {{/if}}
+                {{else}}
+                    <option value="">All Branches</option>
+                    {{#each branches}}
+                    <option value="{{this.TenChiNhanh}}">{{this.TenChiNhanh}}</option>
+                    {{/each}}
+                {{/if}}
             </select>
             <input type="text" placeholder="Search..." class="search-input border rounded p-2">
             <button id="search-btn" class="search-btn">Search</button>
