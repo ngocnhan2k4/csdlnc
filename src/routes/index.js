@@ -27,7 +27,10 @@ function route(app) {
     // Redirect '/' to '/home'
     app.use('/', (req, res, next) => {
         if (req.path === '/') {
-            return res.redirect('/home');
+            if (req.session.user)
+                return res.redirect('/home');
+            else
+                return res.redirect('/auth/signin');
         }
         next();
     });
