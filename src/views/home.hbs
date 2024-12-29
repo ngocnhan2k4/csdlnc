@@ -32,7 +32,7 @@
                  <div class="col-md-3">
                     <label for="orderType" class="form-label">Order Type:</label>
                     <select id="orderType" class="form-select" onchange="handleFilterChange()">  
-                        <option value="O" {{#eq ../orderType "O"}}selected{{/eq}}>Online</option>
+                        <option value="O" {{#eq ../orderType "O"}}selected{{/eq}}>Đặt bàn trước online</option>
                         <option value="T" {{#eq ../orderType "T"}}selected{{/eq}}>Trực Tiếp</option>
                         <option value="G" {{#eq ../orderType "G"}}selected{{/eq}}>Giao Hàng</option>
                     </select>
@@ -503,7 +503,7 @@
     async function checkout() {
         const orderType = document.getElementById('orderType').value;
 
-        if (!selectedTable) {
+        if (!selectedTable && orderType !== 'G') {
             alert('Please select a table!');
             return;
         }
@@ -616,6 +616,11 @@
                 ' Discount: ' + result.data.TienGiam + ' VND' +
                 ' Final Total: ' + result.data.ThanhTien + ' VND'
                 );
+
+                // await 1s then reload the page
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             } else {
             //    alert(responseUpdateTaleStatus.message);
             }

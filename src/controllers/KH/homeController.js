@@ -336,8 +336,11 @@ const processOrder = async (req, res) => {
         
         console.log('result:', result);
         console.log('Order processed successfully:', MaPhieuDat);
-        updateTableStatusInDB(branchId, tableNumber, 'Không trống');
 
+        if (orderType !== "G") {
+            updateTableStatusInDB(branchId, tableNumber, 'Không trống');
+        }
+        
         res.status(200).json({
             success: true,
             message: `Order processed successfully.`,
